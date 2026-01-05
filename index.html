@@ -74,6 +74,59 @@
         .menu-item:hover { background: #fdf5ff; color: var(--main-purple); }
 
         @media (max-width: 768px) { .transcript-container { flex-direction: column; } .highlight-card { flex-direction: column; align-items: flex-start; } .rec-thumb { width: 100%; height: 150px; margin-right: 0; margin-bottom: 10px; } .dashboard-grid { grid-template-columns: 1fr; } }
+           /* --- 🎧 Podcast 卡片美化升級 --- */
+        #podcast-list .content-card {
+            background: white;
+            border: 1px solid #f0e6f5; /* 極淺的紫色邊框 */
+            border-radius: 16px;       /* 更圓潤的圓角 */
+            padding: 20px;
+            margin-bottom: 0;          /* 交給 grid 的 gap 處理 */
+            border-left: 8px solid var(--main-purple); /* 保留妳喜歡的側邊條，但縮小一點 */
+            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;             /* 讓卡片高度整齊 */
+        }
+        
+        #podcast-list .content-card:hover {
+            transform: translateY(-8px); /* 往上飄移 */
+            box-shadow: 0 10px 25px rgba(217, 77, 255, 0.15); /* 陰影加深 */
+            border-left-width: 12px;     /* 移上去時側邊條變粗，增加動感 */
+        }
+        
+        /* 卡片內的標題與描述 */
+        #podcast-list h3 {
+            margin: 10px 0;
+            color: var(--deep-purple);
+            font-size: 1.25rem;
+        }
+        
+        #podcast-list p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+            flex-grow: 1; /* 讓文字撐開空間 */
+        }
+        
+        /* 收聽按鈕美化 */
+        .listen-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--main-purple);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding: 8px 0;
+            transition: 0.2s;
+        }
+        
+        .listen-link:hover {
+            letter-spacing: 1px; /* 移上去時文字稍微撐開 */
+        }
     </style>
 </head>
 <body>
@@ -229,8 +282,26 @@ async function loadPodcasts() {
 }
 
 function renderPodcasts(list) {
-    document.getElementById('podcast-list').innerHTML = list.map(i => `
-        <div class="content-card" style="border-left: 6px solid var(--main-purple);"><span class="highlight-tag">${i.category}</span><h3>${i.title}</h3><p style="font-size:0.9rem;">${i.desc}</p><a href="${i.link}" target="_blank" style="color:var(--main-purple); font-weight:bold;">🎧 收聽單集 →</a></div>`).join('');
+    const area = document.getElementById('podcast-list');
+    
+    // 如果沒有資料，顯示提示
+    if (list.length === 0) {
+        area.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">目前沒有這個類別的 Podcast 喔！</p>';
+        return;
+    }
+
+    area.innerHTML = list.map(i => `
+        <div class="content-card">
+            <div>
+                <span class="highlight-tag">${i.category}</span>
+                <h3>${i.title}</h3>
+                <p>${i.desc || "這集內容非常精彩，快點擊下方連結收聽吧！"}</p>
+            </div>
+            <a href="${i.link}" target="_blank" class="listen-link">
+                <span>🎧</span> 收聽單集 <span>→</span>
+            </a>
+        </div>
+    `).join('');
 }
 
 function filterPodcasts(cat, btn) {

@@ -15,6 +15,50 @@
         .footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #777; }
     </style>
 </head>
+    <div id="translate-popup" style="display:none; position:fixed; background:white; border:1px solid #ccc; padding:10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <strong id="selected-word"></strong>
+    <p id="translation-result">翻譯中...</p>
+    <button id="add-to-list" style="background:#ff4500; color:white; border:none; padding:5px; cursor:pointer;">加入我的單字庫</button>
+</div>
+
+<script>
+document.addEventListener('mouseup', async function(e) {
+    let selection = window.getSelection().toString().trim();
+    let popup = document.getElementById('translate-popup');
+
+    if (selection.length > 0) {
+        // 顯示彈窗並定位在滑鼠位置
+        popup.style.display = 'block';
+        popup.style.left = e.pageX + 'px';
+        popup.style.top = e.pageY + 'px';
+        document.getElementById('selected-word').innerText = selection;
+        
+        // 這裡串接一個免費的翻譯 API (MyMemory API)
+        try {
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${selection}&langpair=nl|zh-TW`);
+            const data = await res.json();
+            document.getElementById('translation-result').innerText = data.responseData.translatedText;
+        } catch (err) {
+            document.getElementById('translation-result').innerText = "翻譯失敗";
+        }
+    } else {
+        popup.style.display = 'none';
+    }
+});
+
+// 加入單字庫功能
+document.getElementById('add-to-list').addEventListener('click', function() {
+    let word = document.getElementById('selected-word').innerText;
+    let trans = document.getElementById('translation-result').innerText;
+    
+    // 存入瀏覽器的 LocalStorage
+    let vocabList = JSON.parse(localStorage.getItem('myVocab') || '[]');
+    vocabList.push({ word, trans, date: new Date().toLocaleDateString() });
+    localStorage.setItem('myVocab', JSON.stringify(vocabList));
+    
+    alert('已加入單字庫！');
+});
+</script>
 <body>
 
 <header>

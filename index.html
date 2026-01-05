@@ -5,25 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>荷蘭語學習誌 - 每日更新</title>
     <style>
-        /* 這裡放 CSS 樣式，負責美化 */
-        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
-        header { background: #ff4500; color: white; padding: 1rem; text-align: center; }
-        nav { background: #333; color: white; display: flex; justify-content: center; padding: 0.5rem; }
-        nav a { color: white; margin: 0 15px; text-decoration: none; }
-        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; }
-        .section-title { border-bottom: 2px solid #ff4500; color: #333; margin-top: 30px; }
-        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        .footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #777; }
+/* 基礎區塊間距與整體風格 */
+body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
+header { background: #ff4500; color: white; padding: 1.5rem; text-align: center; }
+nav { background: #333; color: white; display: flex; justify-content: center; padding: 0.8rem; position: sticky; top: 0; z-index: 100; }
+nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+.container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* 單字卡樣式 */
-        #vocab-display-area { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
-        .flashcard { width: 150px; height: 100px; perspective: 1000px; cursor: pointer; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 10px; }
-        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; border: 1px solid #eee; }
-        .flashcard-front { background-color: #fff; color: #333; font-weight: bold; }
-        .flashcard-back { background-color: #ff4500; color: white; transform: rotateY(180deg); padding: 5px; }
-    </style>
+/* 區塊標題與間隔 */
+.learning-section { margin-bottom: 40px; }
+.section-title { border-bottom: 3px solid #ff4500; color: #333; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: baseline; gap: 10px; }
+.section-title small { font-size: 0.9rem; color: #777; font-weight: normal; }
+.divider { border: 0; border-top: 1px solid #eee; margin: 40px 0; }
+.loading-text { color: #999; font-style: italic; text-align: center; padding: 20px; }
+
+/* 影片與逐字稿美化 */
+.content-card { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 10px; }
+.transcript-grid { display: flex; gap: 20px; margin-top: 20px; }
+.transcript-box { flex: 1; padding: 15px; border-radius: 8px; font-size: 0.95rem; line-height: 1.8; min-height: 100px; }
+.nl { background: #fffaf0; border-left: 4px solid #ff4500; } /* 荷蘭語：暖色 */
+.zh { background: #f9f9f9; border-left: 4px solid #333; }    /* 中文：灰色 */
+
+/* 文法單元選單 */
+.grammar-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grammar-item { background: #fff; border: 1px solid #eee; padding: 12px 20px; border-radius: 8px; text-decoration: none; color: #333; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+.grammar-item:hover { background: #fffaf0; border-color: #ff4500; transform: translateX(5px); }
+.unit-tag { background: #ff4500; color: white; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px; margin-right: 10px; }
+
+/* 網格佈局 (Podcast 與單字) */
+.grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.vocab-grid { display: flex; flex-wrap: wrap; gap: 15px; }
+
+/* 單字卡基礎樣式 (包含之前的 3D 翻轉) */
+.flashcard { width: 160px; height: 110px; perspective: 1000px; cursor: pointer; }
+.flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 10px; }
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; border: 1px solid #eee; padding: 10px; box-sizing: border-box; }
+.flashcard-front { background-color: #fff; color: #333; font-weight: bold; font-size: 1.1rem; }
+.flashcard-back { background-color: #ff4500; color: white; transform: rotateY(180deg); }
+
+/* 手機版適應 */
+@media (max-width: 650px) {
+    .transcript-grid { flex-direction: column; }
+    .grammar-menu { grid-template-columns: 1fr; }
+    .grid-layout { grid-template-columns: 1fr; }
+    .container { padding: 15px; margin: 10px; }
+}
+</style>
 </head>
 <body>
 
@@ -33,35 +61,76 @@
 
 <nav>
     <a href="#">首頁</a>
-    <a href="#common-vocab">常用 500 單字</a> <a href="#vocab">我的單字庫</a>
+    <a href="#video">聽力短片</a>
+    <a href="#grammar">文法單元</a> <a href="#common-vocab">500單字</a>
+    <a href="#vocab">我的單字庫</a>
 </nav>
 
 <div class="container">
-    <h2 class="section-title">今日新內容推薦</h2>
-    <div id="recommendation-area">
-        <p>正在從 JSON 倉庫搬運文章...</p>
-    </div>
-    
-    <h2 class="section-title" id="common-vocab">荷蘭語常用 500 單字練習</h2>
-    <p>這些是荷蘭語中最基礎的單字，建議優先掌握！</p>
-    <div id="common-display-area" style="display: flex; flex-wrap: wrap; gap: 15px;">
+    <section class="learning-section">
+        <h2 class="section-title">📰 今日新聞閱讀 <small>(De Standaard)</small></h2>
+        <div id="recommendation-area">
+            <p class="loading-text">正在從倉庫搬運最新文章...</p>
         </div>
-    
-    <h2 class="section-title" id="vocab">我的單字庫 (Flashcards)</h2>
-    <p>下方顯示你反白存下的單字：</p>
-    <div id="vocab-display-area">
+    </section>
+
+    <hr class="divider">
+
+    <section class="learning-section">
+        <h2 class="section-title">📺 每日聽力短片</h2>
+        <div id="video-section" class="content-card">
+            <div id="video-container">
+                <p class="loading-text">影片載入中...</p>
+            </div>
+            <div class="transcript-grid">
+                <div class="transcript-box nl">
+                    <h4>Nederlands</h4>
+                    <div id="dutch-transcript"></div>
+                </div>
+                <div class="transcript-box zh">
+                    <h4>中文翻譯</h4>
+                    <div id="chinese-transcript"></div>
+                </div>
+            </div>
         </div>
-</div>
+    </section>
 
-<div id="translate-popup" style="display:none; position:fixed; background:white; border:1px solid #ccc; padding:10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index:1000; border-radius: 8px;">
-    <strong id="selected-word"></strong>
-    <p id="translation-result">翻譯中...</p>
-    <button id="add-to-list" style="background:#ff4500; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius: 5px;">加入單字庫</button>
-</div>
+    <hr class="divider">
 
-<div class="footer">
+    <section class="learning-section">
+        <h2 class="section-title">🎧 荷蘭語 Podcast 推薦</h2>
+        <div id="podcast-area" class="grid-layout">
+            <p class="loading-text">正在整理播客清單...</p>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="learning-section">
+        <h2 class="section-title">💡 常用 500 單字練習</h2>
+        <div id="common-display-area" class="vocab-grid">
+            </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="learning-section">
+        <h2 class="section-title">🔥 我的單字庫 <small>(反白即存)</small></h2>
+        <div id="vocab-display-area" class="vocab-grid">
+            </div>
+    </section>
+    
+    <hr class="divider">
+
+    <section class="learning-section">
+        <h2 class="section-title" id="grammar">📚 文法基礎教學 <small>(DutchGrammar.com)</small></h2>
+        <p>依照單元由淺入深學習，建立完整的荷蘭語邏輯：</p>
+        <div id="grammar-list" class="grammar-menu">
+        <p class="loading-text">正在開啟文法課本...</p>
+            </div>
+    </section>
     © 2026 Kelsey's Dutch Lab - 運行於 GitHub Pages
-</div>
+</div> 
 
 <script>
 // 1. 翻譯與儲存功能
@@ -174,7 +243,86 @@ async function loadCommon500() {
         console.log("從 Google 試算表讀取失敗");
     }
 }
-window.onload = function() { loadNews(); loadFlashcards(); };
+    async function loadVideoLesson() {
+    const videoSheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8wPI8N4w0wlhmpmkpocU5EiYc9d3taHZKwCyZLhNgbqX1llerSDiK4Ic8V_pwkBzieJwOPRwDEjNT/pub?output=csv"; 
+    
+    try {
+        const response = await fetch(videoSheetCSV);
+        const data = await response.text();
+        const rows = data.split('\n').slice(1); // 跳過第一列標題
+        
+        if (rows.length > 0) {
+            const cols = rows[0].split(','); // 預設讀取最新（第一筆）影片
+            const videoUrl = cols[0].trim();
+            const title = cols[1].trim();
+            const dutch = cols[2].trim();
+            const chinese = cols[3].trim();
+
+            // 處理 YouTube 連結轉為嵌入格式
+            let videoId = "";
+            if (videoUrl.includes("v=")) {
+                videoId = videoUrl.split("v=")[1].split("&")[0];
+            } else if (videoUrl.includes("be/")) {
+                videoId = videoUrl.split("be/")[1];
+            }
+
+            // 1. 放入影片播放器
+            document.getElementById('video-container').innerHTML = `
+                <h3>${title}</h3>
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+            `;
+
+            // 2. 放入逐字稿 (把 | 符號換成換行，方便妳在試算表裡寫長文)
+            document.getElementById('dutch-transcript').innerText = dutch.replaceAll('|', '\n');
+            document.getElementById('chinese-transcript').innerText = chinese.replaceAll('|', '\n');
+        }
+    } catch (err) {
+        console.log("影片資料載入失敗", err);
+    }
+}
+    
+async function loadGrammar() {
+    // 💡 貼上妳剛剛取得的「文法分頁」專屬 CSV 連結
+    const grammarSheetCSV = "這裡貼上妳的文法分頁CSV網址"; 
+    
+    try {
+        const response = await fetch(grammarSheetCSV);
+        const data = await response.text();
+        const rows = data.split('\n').slice(1); 
+        const area = document.getElementById('grammar-list');
+        area.innerHTML = '';
+
+        rows.forEach(row => {
+            const cols = row.split(',');
+            if (cols.length >= 2) {
+                const unit = cols[0].trim();
+                const title = cols[1].trim();
+                const link = cols[2].trim();
+
+                // 產生美美的文法選單
+                area.innerHTML += `
+                    <a href="${link}" target="_blank" class="grammar-item">
+                        <span><span class="unit-tag">Unit ${unit}</span> ${title}</span>
+                        <span style="color: #ccc;">→</span>
+                    </a>
+                `;
+            }
+        });
+    } catch (err) {
+        console.log("文法載入失敗", err);
+    }
+}
+// 記得在 window.onload 裡面加入這個函數
+// 這是妳網頁最底部的啟動開關
+window.onload = function() { 
+    loadNews();          // 載入新聞
+    loadFlashcards();    // 載入個人單字卡
+    loadCommon500();     // 載入 500 常用字
+    loadVideoLesson();   // 載入影片逐字稿
+    loadPodcasts();      // 載入 Podcast 清單
+    loadGrammar();       // ✨ 新增這一行：載入文法單元
+};
+
 </script>
 
 </body>

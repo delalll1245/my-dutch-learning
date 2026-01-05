@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>荷蘭語學習誌 - 每日更新</title>
+    <title>「荷」理懷疑我學不會 - 荷蘭語學習網站</title>
     <style>
 /* 基礎區塊間距與整體風格 */
 body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
@@ -56,35 +56,38 @@ nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; 
 <body>
 
 <header>
-    <h1>荷蘭語學習誌</h1>
+    <h1>「荷」理懷疑我學不會</h1>
 </header>
 
 <nav>
     <a href="#">首頁</a>
-    <a href="#video">聽力短片</a>
-    <a href="#grammar">文法單元</a> <a href="#common-vocab">500單字</a>
+    <a href="#news">今日新聞</a>
+    <a href="#video">一些短片</a>
+    <a href="#grammar">文法小單元</a> 
+    <a href="#common-vocab">常用500單字</a>
     <a href="#vocab">我的單字庫</a>
+    <a href="#podcast">Podcast</a>
 </nav>
 
 <div class="container">
-    <section class="learning-section">
-        <h2 class="section-title">📰 今日新聞閱讀 <small>(De Standaard)</small></h2>
-        <div id="recommendation-area">
-            <p class="loading-text">正在從倉庫搬運最新文章...</p>
-        </div>
-    </section>
+    <section class="learning-section" id="news">
+    <h2 class="section-title">📰 今日新聞閱讀 <small>(De Standaard)</small></h2>
+    <div id="recommendation-area">
+        <p class="loading-text">正在從倉庫搬運最新文章...</p>
+    </div>
+</section>
 
     <hr class="divider">
 
     <section class="learning-section">
-        <h2 class="section-title">📺 每日聽力短片</h2>
+        <h2 class="section-title">📺 每日短片推薦</h2>
         <div id="video-section" class="content-card">
             <div id="video-container">
                 <p class="loading-text">影片載入中...</p>
             </div>
             <div class="transcript-grid">
                 <div class="transcript-box nl">
-                    <h4>Nederlands</h4>
+                    <h4>荷語逐字稿</h4>
                     <div id="dutch-transcript"></div>
                 </div>
                 <div class="transcript-box zh">
@@ -97,11 +100,11 @@ nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; 
 
     <hr class="divider">
 
-    <section class="learning-section">
-        <h2 class="section-title">🎧 荷蘭語 Podcast 推薦</h2>
-        <div id="podcast-area" class="grid-layout">
-            <p class="loading-text">正在整理播客清單...</p>
-        </div>
+    <section class="learning-section" id="podcast">
+    <h2 class="section-title">🎧 荷蘭語 Podcast 推薦<small>(快來聽!!!)</small></h2>
+    <div id="podcast-area" class="grid-layout">
+        <p class="loading-text">正在整理播客清單...</p>
+    </div>
     </section>
 
     <hr class="divider">
@@ -115,7 +118,7 @@ nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; 
     <hr class="divider">
 
     <section class="learning-section">
-        <h2 class="section-title">🔥 我的單字庫 <small>(反白即存)</small></h2>
+        <h2 class="section-title">🔥 我的單字庫 <small>(反白選取可以儲存單字)</small></h2>
         <div id="vocab-display-area" class="vocab-grid">
             </div>
     </section>
@@ -129,7 +132,7 @@ nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; 
         <p class="loading-text">正在開啟文法課本...</p>
             </div>
     </section>
-    © 2026 Kelsey's Dutch Lab - 運行於 GitHub Pages
+    © 2026 Kelsey Dutch Lab - 「荷」理懷疑我學不會
 </div> 
 
 <script>

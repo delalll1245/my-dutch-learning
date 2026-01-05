@@ -141,7 +141,7 @@ function deleteWord(index) {
 // 修改後的讀取 500 單字函數
 async function loadCommon500() {
     // 這裡替換成妳剛剛在 Google 試算表複製的 CSV 連結
-    const googleSheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pub?output=csv"; 
+    const googleSheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pubhtml"; 
 
     try {
         const response = await fetch(googleSheetCSV);

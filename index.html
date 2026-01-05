@@ -68,6 +68,54 @@
             .dashboard-grid { grid-template-columns: 1fr; }
             .transcript-grid { flex-direction: column; }
         }
+                /* --- Podcast 類別標籤/按鈕升級 --- */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 5px 0;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            color: #D94DFF;
+            border: 1.5px solid #D94DFF;
+            padding: 6px 18px;
+            border-radius: 25px; /* 膠囊圓角 */
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 2px 5px rgba(217, 77, 255, 0.1);
+            outline: none;
+        }
+        
+        /* 懸浮效果：輕微浮起與加深陰影 */
+        .filter-btn:hover {
+            background-color: #fdf5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(217, 77, 255, 0.2);
+        }
+        
+        /* 點選後的狀態：實心紫色 */
+        .filter-btn.active {
+            background-color: #D94DFF;
+            color: white;
+            box-shadow: 0 4px 12px rgba(217, 77, 255, 0.3);
+        }
+        
+        /* 卡片內的小標籤同步優化 */
+        .highlight-tag {
+            background: #fdf5ff;
+            color: #D94DFF;
+            border: 1px solid rgba(217, 77, 255, 0.3);
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase; /* 讓英文分類看起來更專業 */
+        }
     </style>
 </head>
 <body>

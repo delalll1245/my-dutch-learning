@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>Kelsey 的荷蘭語學習誌</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>荷蘭語學習誌 - 每日更新</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
+        header { background: #ff4500; color: white; padding: 1rem; text-align: center; }
+        nav { background: #333; color: white; display: flex; justify-content: center; padding: 0.5rem; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; }
+        .section-title { border-bottom: 2px solid #ff4500; color: #333; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #777; }
+    </style>
 </head>
 <body>
-    <h1>Welkom! 我的荷蘭語學習筆記</h1>
-    <p>這裡將會放我背的單字跟看的短片。</p>
-    </body>
+
+<header>
+    <h1>荷蘭語學習誌</h1>
+</header>
+
+<nav>
+    <a href="#">首頁</a>
+    <a href="#vocab">背單字</a>
+    <a href="#video">看短片</a>
+    <a href="#article">讀文章</a>
+    <a href="#podcast">Podcast</a>
+</nav>
+
+<div class="container">
+    <h2 class="section-title">今日新內容推薦 (Vandaag)</h2>
+    <div id="recommendation-area">
+        <p>正在載入今日練習內容...</p>
+        <div class="card">
+            <h3>每日單字卡</h3>
+            <p>De leerstof (學習內容)</p>
+            <button onclick="alert('背誦功能開發中！')">開始練習</button>
+        </div>
+    </div>
+
+    <h2 class="section-title">文法小單元</h2>
+    <div class="card">
+        <p>正在準備 DutchGrammar.com 的基礎課程...</p>
+    </div>
+</div>
+
+<div class="footer">
+    © 2026 荷蘭語學習網站 - 運行於 GitHub Pages
+</div>
+
+</body>
 </html>

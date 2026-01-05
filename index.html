@@ -62,14 +62,60 @@
     .transcript-box { flex: 1; padding: 15px; border-radius: 10px; }
     .nl { background: #fdf5ff; border-left: 5px solid #D94DFF; }
     .zh { background: #f9f9f9; border-left: 5px solid #666; }
-
-    /* --- 7. 手機版適應 --- */
-    @media (max-width: 600px) {
-        .highlight-card { flex-direction: column; align-items: flex-start; }
-        .rec-thumb { width: 100%; height: 150px; margin-right: 0; margin-bottom: 10px; }
-        .dashboard-grid { grid-template-columns: 1fr; }
-        .transcript-grid { flex-direction: column; }
+    /* --- 單字卡區域網格排版 --- */
+    .vocab-grid { 
+        display: grid; 
+        /* 讓電腦版自動排開，手機版自動換行，最小寬度 150px */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+        gap: 15px; 
+        padding: 10px 0;
     }
+    
+    /* --- 單字卡卡片本體 --- */
+    .flashcard { 
+        height: 110px; 
+        perspective: 1000px; /* 3D 翻轉必備 */
+        cursor: pointer; 
+    }
+    
+    .flashcard-inner { 
+        position: relative; 
+        width: 100%; 
+        height: 100%; 
+        transition: transform 0.6s; 
+        transform-style: preserve-3d; /* 讓內容有 3D 感 */
+    }
+    
+    /* 當卡片被加上 .flipped 類別時翻轉 180 度 */
+    .flashcard.flipped .flashcard-inner { 
+        transform: rotateY(180deg); 
+    }
+    
+    .flashcard-front, .flashcard-back { 
+        position: absolute; 
+        width: 100%; 
+        height: 100%; 
+        backface-visibility: hidden; /* 翻到背面時隱藏正面 */
+        border-radius: 12px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        padding: 10px; 
+        text-align: center; 
+        border: 1px solid #eee; 
+        box-sizing: border-box; /* 確保邊框不會撐大卡片 */
+        font-weight: bold;
+    }
+    
+    .flashcard-front { background: white; color: #4A148C; }
+    .flashcard-back { background: #D94DFF; color: white; transform: rotateY(180deg); }
+        /* --- 7. 手機版適應 --- */
+        @media (max-width: 600px) {
+            .highlight-card { flex-direction: column; align-items: flex-start; }
+            .rec-thumb { width: 100%; height: 150px; margin-right: 0; margin-bottom: 10px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .transcript-grid { flex-direction: column; }
+        }
         /* 找這附近貼上就好 */
     .back-btn {
         background: none;      /* 拿掉背景 */

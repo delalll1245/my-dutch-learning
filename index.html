@@ -33,7 +33,7 @@
 
 <nav>
     <a href="#">首頁</a>
-    <a href="#vocab">我的單字庫</a>
+    <a href="#common-vocab">常用 500 單字</a> <a href="#vocab">我的單字庫</a>
 </nav>
 
 <div class="container">
@@ -41,7 +41,12 @@
     <div id="recommendation-area">
         <p>正在從 JSON 倉庫搬運文章...</p>
     </div>
-
+    
+    <h2 class="section-title" id="common-vocab">荷蘭語常用 500 單字練習</h2>
+    <p>這些是荷蘭語中最基礎的單字，建議優先掌握！</p>
+    <div id="common-display-area" style="display: flex; flex-wrap: wrap; gap: 15px;">
+        </div>
+    
     <h2 class="section-title" id="vocab">我的單字庫 (Flashcards)</h2>
     <p>下方顯示你反白存下的單字：</p>
     <div id="vocab-display-area">
@@ -133,7 +138,42 @@ function deleteWord(index) {
     localStorage.setItem('myVocab', JSON.stringify(vocabList));
     loadFlashcards();
 }
+// 修改後的讀取 500 單字函數
+async function loadCommon500() {
+    // 這裡替換成妳剛剛在 Google 試算表複製的 CSV 連結
+    const googleSheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pub?output=csv"; 
 
+    try {
+        const response = await fetch(googleSheetCSV);
+        const csvData = await response.text();
+        
+        // 簡易的 CSV 轉 JSON 處理 (跳過第一列標題)
+        const rows = csvData.split('\n').slice(1); 
+        const area = document.getElementById('common-display-area');
+        area.innerHTML = '';
+
+        rows.forEach(row => {
+            const cols = row.split(',');
+            if (cols.length >= 2) {
+                const word = cols[0].trim();
+                const trans = cols[1].trim();
+                
+                area.innerHTML += `
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')" style="border: 2px solid #333;">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front" style="background-color: #f9f9f9;"><p>${word}</p></div>
+                            <div class="flashcard-back" style="background-color: #333;">
+                                <p>${trans}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    } catch (err) {
+        console.log("從 Google 試算表讀取失敗");
+    }
+}
 window.onload = function() { loadNews(); loadFlashcards(); };
 </script>
 

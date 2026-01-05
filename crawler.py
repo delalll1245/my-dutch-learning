@@ -2,8 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import csv # 💡 新增：處理 CSV 必備
+from io import StringIO # 💡 新增：處理文字串流
 
-# 設定 Header 避免被網站阻擋
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
@@ -18,7 +19,7 @@ def get_soup(url):
         print(f"無法連線至 {url}: {e}")
         return None
 
-# --- 1. 自動巡邏網站邏輯 ---
+# --- 1. 自動巡邏網站邏輯 (保持原有逻辑，增加防呆) ---
 
 def scrape_wablieft():
     url = "http://www.wablieft.be/nl/krant"
@@ -41,6 +42,7 @@ def scrape_metro():
     soup = get_soup(url)
     results = []
     if soup:
+        # ⚠️ Metro 的選取器很常換，如果跑不動請檢查此處
         for item in soup.select('article')[:3]:
             title_tag = item.select_one('h2')
             link_tag = item.select_one('a')
@@ -85,27 +87,27 @@ def scrape_nedbox():
                 })
     return results
 
-# --- 2. 妳的 Google 試算表手動資料庫 ---
+# --- 2. 妳的 Google 試算表手動資料庫 (重大修正) ---
 
 def scrape_google_sheet():
-    # 💡 這裡已經填入妳提供的連結
     csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyPZtfBk2ED0-JBkhF0hTstrvp67v6sr5ndwAGQT8miCARIm1Bi5otqE58noyso-5Psewp4H4Q4Ogu/pub?output=csv"
-    
     results = []
     try:
         res = requests.get(csv_url, timeout=10)
         res.encoding = 'utf-8'
-        lines = res.text.split('\n')
         
-        # 假設 A:Title, B:URL, C:Source, D:Content
-        for line in lines[1:]: # 跳過第一列標題
-            cols = line.split(',')
-            if len(cols) >= 4:
+        # 💡 改用 csv.reader 讀取，避免逗號導致資料切碎
+        f = StringIO(res.text)
+        reader = csv.reader(f)
+        next(reader) # 跳過第一列標題
+        
+        for row in reader:
+            if len(row) >= 4:
                 results.append({
-                    "title": cols[0].strip(),
-                    "url": cols[1].strip(),
-                    "source": cols[2].strip() or "Kelsey 精選",
-                    "content": cols[3].strip()
+                    "title": row[0].strip(),
+                    "url": row[1].strip(),
+                    "source": row[2].strip() or "Kelsey 精選",
+                    "content": row[3].strip()
                 })
     except Exception as e:
         print(f"Google 試算表讀取失敗: {e}")
@@ -114,20 +116,21 @@ def scrape_google_sheet():
 # --- 總整合執行 ---
 
 def main():
-    print("巡邏隊出動！")
+    print("嘟仔巡邏隊出動！")
     final_news = []
     
-    # 抓取所有來源
+    # 抓取並合併資料
     final_news.extend(scrape_wablieft())
     final_news.extend(scrape_metro())
     final_news.extend(scrape_zinin())
     final_news.extend(scrape_nedbox())
     final_news.extend(scrape_google_sheet())
     
-    # 確保資料夾存在
+    # 過濾掉空的內容
+    final_news = [n for n in final_news if n['title']]
+    
     os.makedirs('data', exist_ok=True)
     
-    # 存檔為 JSON
     with open('data/news.json', 'w', encoding='utf-8') as f:
         json.dump(final_news, f, ensure_ascii=False, indent=4)
     

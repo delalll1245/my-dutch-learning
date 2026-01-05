@@ -18,15 +18,13 @@ def get_soup(url):
         print(f"無法連線至 {url}: {e}")
         return None
 
-# --- 各個網站的專屬抓取邏輯 ---
+# --- 1. 自動巡邏網站邏輯 ---
 
 def scrape_wablieft():
-    """抓取 Wablieft (學習者友善新聞)"""
     url = "http://www.wablieft.be/nl/krant"
     soup = get_soup(url)
     results = []
     if soup:
-        # 抓取文章區塊 (根據該站結構抓取標題與網址)
         for item in soup.select('.views-row')[:3]: 
             link_tag = item.select_one('h2 a')
             if link_tag:
@@ -34,12 +32,11 @@ def scrape_wablieft():
                     "title": link_tag.get_text(strip=True),
                     "url": "http://www.wablieft.be" + link_tag['href'],
                     "source": "Wablieft (Easy)",
-                    "content": "專為荷蘭語學習者設計的簡化新聞內容。"
+                    "content": "專為學習者設計的簡化新聞。"
                 })
     return results
 
 def scrape_metro():
-    """抓取 Metro (生活化新聞)"""
     url = "https://nl.metrotime.be/onspanning"
     soup = get_soup(url)
     results = []
@@ -52,12 +49,11 @@ def scrape_metro():
                     "title": title_tag.get_text(strip=True),
                     "url": link_tag['href'] if link_tag['href'].startswith('http') else "https://nl.metrotime.be" + link_tag['href'],
                     "source": "Metrotime",
-                    "content": "來自 Metro 的最新生活與娛樂動態。"
+                    "content": "來自 Metro 的最新生活與時事。"
                 })
     return results
 
 def scrape_zinin():
-    """抓取 Zin in Nederlands (學習部落格)"""
     url = "https://zininnederlands.be/"
     soup = get_soup(url)
     results = []
@@ -69,17 +65,15 @@ def scrape_zinin():
                     "title": link_tag.get_text(strip=True),
                     "url": link_tag['href'],
                     "source": "Zin in Nederlands",
-                    "content": "實用的荷蘭語學習技巧與日常用法。"
+                    "content": "荷蘭語學習技巧與日常用法。"
                 })
     return results
 
 def scrape_nedbox():
-    """抓取 NedBox (互動式學習新聞)"""
     url = "https://www.nedbox.be/nieuws"
     soup = get_soup(url)
     results = []
     if soup:
-        # NedBox 結構較複雜，通常抓取其最新消息區塊
         for item in soup.select('.views-row')[:3]:
             title_tag = item.select_one('.field-content a')
             if title_tag:
@@ -87,21 +81,48 @@ def scrape_nedbox():
                     "title": title_tag.get_text(strip=True),
                     "url": "https://www.nedbox.be" + title_tag['href'],
                     "source": "NedBox",
-                    "content": "結合影音與互動練習的荷蘭語新聞。"
+                    "content": "互動式學習新聞內容。"
                 })
+    return results
+
+# --- 2. 妳的 Google 試算表手動資料庫 ---
+
+def scrape_google_sheet():
+    # 💡 這裡已經填入妳提供的連結
+    csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyPZtfBk2ED0-JBkhF0hTstrvp67v6sr5ndwAGQT8miCARIm1Bi5otqE58noyso-5Psewp4H4Q4Ogu/pub?output=csv"
+    
+    results = []
+    try:
+        res = requests.get(csv_url, timeout=10)
+        res.encoding = 'utf-8'
+        lines = res.text.split('\n')
+        
+        # 假設 A:Title, B:URL, C:Source, D:Content
+        for line in lines[1:]: # 跳過第一列標題
+            cols = line.split(',')
+            if len(cols) >= 4:
+                results.append({
+                    "title": cols[0].strip(),
+                    "url": cols[1].strip(),
+                    "source": cols[2].strip() or "Kelsey 精選",
+                    "content": cols[3].strip()
+                })
+    except Exception as e:
+        print(f"Google 試算表讀取失敗: {e}")
     return results
 
 # --- 總整合執行 ---
 
 def main():
-    print("開始巡邏荷蘭語新聞...")
+    print("巡邏隊出動！")
     final_news = []
     
-    # 輪流執行各個爬蟲函數
+    # 抓取所有來源
     final_news.extend(scrape_wablieft())
     final_news.extend(scrape_metro())
     final_news.extend(scrape_zinin())
     final_news.extend(scrape_nedbox())
+    final_news.extend(scrape_google_sheet())
     
     # 確保資料夾存在
     os.makedirs('data', exist_ok=True)
@@ -110,7 +131,7 @@ def main():
     with open('data/news.json', 'w', encoding='utf-8') as f:
         json.dump(final_news, f, ensure_ascii=False, indent=4)
     
-    print(f"成功更新！共抓取 {len(final_news)} 則新聞。")
+    print(f"成功更新！現在共有 {len(final_news)} 則新聞資料。")
 
 if __name__ == "__main__":
     main()

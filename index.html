@@ -69,6 +69,18 @@
             .transcript-grid { flex-direction: column; }
             .dashboard-grid { grid-template-columns: 1fr; }
         }
+        /* 來源標籤樣式 */
+        .source-tag {
+            background: #fdf5ff;
+            color: #D94DFF;
+            border: 1px solid #D94DFF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -190,7 +202,7 @@ function pushToHome(type, title, category, targetId) {
     const home = document.getElementById('home-recommendation');
     if (home.innerHTML.includes("準備今日驚喜")) home.innerHTML = '';
     home.innerHTML += `
-        <div class="highlight-card" onclick="showPage('${targetId}', '${category}')">
+        <div class="highlight-card" onclick="showPage('${targetId}')">
             <div>
                 <span class="highlight-tag">${type} · ${category}</span>
                 <h3 style="margin:5px 0;">${title}</h3>
@@ -207,12 +219,27 @@ async function loadNews() {
         const res = await fetch('data/news.json');
         const data = await res.json();
         const area = document.getElementById('news-list');
-        area.innerHTML = '';
+        area.innerHTML = ''; // 清空舊內容
+
         data.forEach((art, i) => {
-            area.innerHTML += `<div class="content-card"><h3>${art.title}</h3><p>${art.content.substring(0, 300)}...</p></div>`;
-            if (i === 0) pushToHome('最新新聞', art.title, '新聞', 'news');
+            // 渲染到新聞分頁
+            area.innerHTML += `
+                <div class="content-card">
+                    <span class="source-tag">${art.source}</span> 
+                    <h3>${art.title}</h3>
+                    <p>${art.content}</p>
+                    <a href="${art.url}" target="_blank" style="color:#D94DFF; font-size:0.9rem;">閱讀原文 →</a>
+                </div>
+            `;
+            
+            // 如果是第一則，推送到首頁推薦 (維持妳原本的邏輯)
+            if (i === 0) {
+                pushToHome('今日新聞', art.title, art.source, 'news');
+            }
         });
-    } catch (e) { console.log("新聞載入失敗"); }
+    } catch (e) {
+        console.log("新聞載入失敗，可能 data/news.json 還沒生成", e);
+    }
 }
 
 async function loadVideo() {

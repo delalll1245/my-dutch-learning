@@ -187,21 +187,21 @@
     <div class="nav-links">
         <a onclick="showPage('home-page')">🏠 首頁</a>
         <a onclick="showPage('news')">📰 今日新聞</a>
-        <a onclick="showPage('video')">📺 聽力短片</a>
+        <a onclick="showPage('video')">📺 精選影片</a>
         <a onclick="showPage('podcast')">🎧 Podcast</a>
         <a onclick="showPage('grammar')">📚 文法單元</a>
-        <a onclick="showPage('common-vocab')">💡 500單字</a>
+        <a onclick="showPage('common-vocab')">💡 常用500單字</a>
         <a onclick="showPage('vocab')">🔥 我的單字庫</a>
     </div>
 </nav>
 
 <div class="container">
     <section id="home-page" class="page active-page">
-        <h2 class="section-title">Welkom! 妳今天想學什麼？</h2>
+        <h2 class="section-title">Welkom! 今天想學什麼？</h2>
         <div class="dashboard-grid">
             <div class="dash-card" onclick="showPage('news')">📰 今日新聞</div>
-            <div class="dash-card" onclick="showPage('video')">📺 聽力短片</div>
-            <div class="dash-card" onclick="showPage('podcast')">🎧 播客推薦</div>
+            <div class="dash-card" onclick="showPage('video')">📺 精選影片</div>
+            <div class="dash-card" onclick="showPage('podcast')">🎧 Podcast</div>
             <div class="dash-card" onclick="showPage('grammar')">📚 文法單元</div>
             <div class="dash-card" onclick="showPage('common-vocab')">💡 500單字</div>
             <div class="dash-card" onclick="showPage('vocab')">🔥 我的單字庫</div>
@@ -213,11 +213,11 @@
         </div>
     </section>
 
-    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞閱讀</h2><div id="news-list"></div></section>
+    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
     
    <section id="video" class="page">
     <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-    <h2 class="section-title">📺 每日短片推薦</h2>
+    <h2 class="section-title">📺 精選影片</h2>
     
     <div id="video-content" class="content-card">
         <div id="video-player" style="border-radius: 12px; overflow: hidden; margin-bottom: 20px;"></div>
@@ -235,7 +235,7 @@
     </div>
 </section>
 
-    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
+    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
 
     <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">💡 常用 500 單字練習</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
 

@@ -70,6 +70,26 @@
         .dashboard-grid { grid-template-columns: 1fr; }
         .transcript-grid { flex-direction: column; }
     }
+        /* 找這附近貼上就好 */
+    .back-btn {
+        background: none;      /* 拿掉背景 */
+        border: none;          /* 拿掉外框 */
+        padding: 0;            /* 拿掉內距 */
+        color: #666;           /* 灰字 */
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 20px;
+        display: flex;         /* 讓箭頭跟文字排好 */
+        align-items: center;
+        gap: 5px;
+        transition: 0.3s;
+    }
+    
+    .back-btn:hover {
+        color: #D94DFF;        /* 滑鼠移上去變紫色 */
+        text-decoration: underline; /* 加底線 */
+    }
 </style>
 </head>
 <body>

@@ -5,110 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>「荷」理懷疑我學不會 - Kelsey Dutch Lab</title>
     <style>
-    /* --- 1. 基礎樣式與浪漫紫主題 --- */
-    body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f5fa; color: #333; }
-    header { background: #D94DFF; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 10px rgba(217, 77, 255, 0.2); cursor: pointer; }
-    .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); min-height: 80vh; }
-    
-    /* --- 2. 導覽列 --- */
-    nav { background: #333; color: white; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
-    .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
-    nav a { color: white; padding: 15px 20px; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    nav a:hover { color: #D94DFF; background: #444; }
+        /* --- 1. 基礎樣式與浪漫紫主題 --- */
+        body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f5fa; color: #333; }
+        header { background: #D94DFF; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 10px rgba(217, 77, 255, 0.2); cursor: pointer; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); min-height: 80vh; }
+        
+        /* --- 2. 導覽列 --- */
+        nav { background: #333; color: white; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
+        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
+        nav a { color: white; padding: 15px 20px; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        nav a:hover { color: #D94DFF; background: #444; }
 
-    /* --- 3. SPA 頁面切換動畫 --- */
-    .page { display: none; animation: fadeIn 0.4s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .active-page { display: block; }
+        /* --- 3. SPA 頁面切換與動畫 --- */
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .active-page { display: block; }
 
-    /* --- 4. 首頁 Dashboard 網格 --- */
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
-    .dash-card { background: #fff; border: 2px solid #D94DFF; color: #4A148C; padding: 30px 20px; text-align: center; border-radius: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(217, 77, 255, 0.1); }
-    .dash-card:hover { background: #D94DFF; color: white; transform: translateY(-5px); }
-    
-    /* --- 5. ✨ 重點：首頁推薦卡片（含縮圖優化） --- */
-    .highlight-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-    .highlight-card { 
-        background: white; 
-        border: 1px solid #f0e6f5; 
-        border-radius: 12px; 
-        border-left: 6px solid #D94DFF; 
-        cursor: pointer; 
-        transition: 0.3s; 
-        display: flex; /* 改成橫向排列 */
-        align-items: center; 
-        padding: 12px;
-        overflow: hidden;
-    }
-    .highlight-card:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(217, 77, 255, 0.15); }
-    
-    /* 縮圖樣式 */
-    .rec-thumb { 
-        width: 120px; 
-        height: 80px; 
-        object-fit: cover; 
-        border-radius: 8px; 
-        margin-right: 15px; 
-        flex-shrink: 0; /* 確保圖片不會被擠壓 */
-    }
-    .rec-content { flex: 1; }
+        /* --- 4. 首頁與推薦卡片 --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+        .dash-card { background: #fff; border: 2px solid #D94DFF; color: #4A148C; padding: 30px 20px; text-align: center; border-radius: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(217, 77, 255, 0.1); }
+        .dash-card:hover { background: #D94DFF; color: white; transform: translateY(-5px); }
 
-    .highlight-tag { background: #fdf5ff; color: #D94DFF; border: 1px solid #D94DFF; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .highlight-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .highlight-card { background: white; border: 1px solid #f0e6f5; border-radius: 12px; border-left: 6px solid #D94DFF; cursor: pointer; transition: 0.3s; display: flex; align-items: center; padding: 12px; overflow: hidden; }
+        .highlight-card:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(217, 77, 255, 0.15); }
+        
+        .rec-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
+        .rec-content { flex: 1; }
+        .highlight-tag { background: #fdf5ff; color: #D94DFF; border: 1px solid #D94DFF; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .source-tag { background: #eee; color: #666; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-bottom: 5px; display: inline-block; }
 
-    /* --- 6. 其他組件 (單字卡、影片區) --- */
-    .section-title { border-bottom: 3px solid #D94DFF; color: #4A148C; padding-bottom: 10px; margin-bottom: 25px; }
-    .content-card { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-    .transcript-grid { display: flex; gap: 20px; margin-top: 20px; }
-    .transcript-box { flex: 1; padding: 15px; border-radius: 10px; }
-    .nl { background: #fdf5ff; border-left: 5px solid #D94DFF; }
-    .zh { background: #f9f9f9; border-left: 5px solid #666; }
-    /* --- 單字卡區域網格排版 --- */
-    .vocab-grid { 
-        display: grid; 
-        /* 讓電腦版自動排開，手機版自動換行，最小寬度 150px */
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-        gap: 15px; 
-        padding: 10px 0;
-    }
-    
-    /* --- 單字卡卡片本體 --- */
-    .flashcard { 
-        height: 110px; 
-        perspective: 1000px; /* 3D 翻轉必備 */
-        cursor: pointer; 
-    }
-    
-    .flashcard-inner { 
-        position: relative; 
-        width: 100%; 
-        height: 100%; 
-        transition: transform 0.6s; 
-        transform-style: preserve-3d; /* 讓內容有 3D 感 */
-    }
-    
-    /* 當卡片被加上 .flipped 類別時翻轉 180 度 */
-    .flashcard.flipped .flashcard-inner { 
-        transform: rotateY(180deg); 
-    }
-    
-    .flashcard-front, .flashcard-back { 
-        position: absolute; 
-        width: 100%; 
-        height: 100%; 
-        backface-visibility: hidden; /* 翻到背面時隱藏正面 */
-        border-radius: 12px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        padding: 10px; 
-        text-align: center; 
-        border: 1px solid #eee; 
-        box-sizing: border-box; /* 確保邊框不會撐大卡片 */
-        font-weight: bold;
-    }
-    
-    .flashcard-front { background: white; color: #4A148C; }
-    .flashcard-back { background: #D94DFF; color: white; transform: rotateY(180deg); }
+        /* --- 5. 單字卡 (Flashcards) --- */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 10px 0; }
+        .flashcard { height: 110px; perspective: 1000px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; border: 1px solid #eee; box-sizing: border-box; font-weight: bold; }
+        .flashcard-front { background: white; color: #4A148C; }
+        .flashcard-back { background: #D94DFF; color: white; transform: rotateY(180deg); }
+
+        /* --- 6. 介面組件 (按鈕、翻譯窗、右鍵選單) --- */
+        .back-btn { background: none; border: none; padding: 0; color: #666; font-size: 1rem; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .back-btn:hover { color: #D94DFF; text-decoration: underline; }
+
+        #translate-popup { display: none; position: absolute; background: white; border: 1px solid #D94DFF; padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2500; border-radius: 12px; width: 220px; }
+        #add-to-list-btn { background: #D94DFF; color: white; border: none; padding: 8px; width: 100%; border-radius: 6px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
+        #context-menu { display: none; position: absolute; z-index: 3000; background: white; border: 1px solid #D94DFF; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); overflow: hidden; width: 130px; }
+        .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; color: #333; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .menu-item:hover { background: #fdf5ff; color: #D94DFF; }
+        .menu-item.delete { color: #ff4d4d; }
+
+        .section-title { border-bottom: 3px solid #D94DFF; color: #4A148C; padding-bottom: 10px; margin-bottom: 25px; }
+        .content-card { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .transcript-grid { display: flex; gap: 20px; margin-top: 20px; }
+        .transcript-box { flex: 1; padding: 15px; border-radius: 10px; }
+
         /* --- 7. 手機版適應 --- */
         @media (max-width: 600px) {
             .highlight-card { flex-direction: column; align-items: flex-start; }
@@ -116,64 +68,7 @@
             .dashboard-grid { grid-template-columns: 1fr; }
             .transcript-grid { flex-direction: column; }
         }
-            /* --- 右鍵自定義選單樣式 --- */
-    #context-menu {
-        display: none; /* 預設隱藏 */
-        position: absolute;
-        z-index: 3000;
-        background: white;
-        border: 1px solid #D94DFF;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        overflow: hidden;
-        width: 130px;
-    }
-    
-    .menu-item {
-        padding: 10px 15px;
-        cursor: pointer;
-        font-size: 14px;
-        color: #333;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .menu-item:hover {
-        background: #fdf5ff;
-        color: #D94DFF;
-    }
-    
-    .menu-item.delete {
-        color: #ff4d4d; /* 刪除選項用紅色 */
-    }
-    
-    .menu-item.delete:hover {
-        background: #fff5f5;
-        color: #ff0000;
-    }
-        /* 找這附近貼上就好 */
-    .back-btn {
-        background: none;      /* 拿掉背景 */
-        border: none;          /* 拿掉外框 */
-        padding: 0;            /* 拿掉內距 */
-        color: #666;           /* 灰字 */
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        margin-bottom: 20px;
-        display: flex;         /* 讓箭頭跟文字排好 */
-        align-items: center;
-        gap: 5px;
-        transition: 0.3s;
-    }
-    
-    .back-btn:hover {
-        color: #D94DFF;        /* 滑鼠移上去變紫色 */
-        text-decoration: underline; /* 加底線 */
-    }
-</style>
+    </style>
 </head>
 <body>
 
@@ -182,8 +77,7 @@
 </header>
 
 <nav>
-    <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    <div class="nav-links" id="navLinks">
+    <div class="nav-links">
         <a onclick="showPage('home-page')">🏠 首頁</a>
         <a onclick="showPage('news')">📰 今日新聞</a>
         <a onclick="showPage('video')">📺 聽力短片</a>
@@ -195,7 +89,6 @@
 </nav>
 
 <div class="container">
-    
     <section id="home-page" class="page active-page">
         <h2 class="section-title">Welkom! 妳今天想學什麼？</h2>
         <div class="dashboard-grid">
@@ -213,91 +106,53 @@
         </div>
     </section>
 
-    <section id="news" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">📰 今日新聞閱讀 <small>(De Standaard)</small></h2>
-        <div id="news-list"></div>
-    </section>
+    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞閱讀</h2><div id="news-list"></div></section>
+    
+    <section id="video" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📺 每日短片推薦</h2><div id="video-content" class="content-card"><div id="video-player"></div><div class="transcript-grid"><div class="transcript-box nl"><h4>荷語逐字稿</h4><div id="dutch-transcript"></div></div><div class="transcript-box zh"><h4>中文翻譯</h4><div id="chinese-transcript"></div></div></div></div></section>
 
-    <section id="video" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">📺 每日短片推薦</h2>
-        <div id="video-content" class="content-card">
-            <div id="video-player"></div>
-            <div class="transcript-grid">
-                <div class="transcript-box nl"><h4>荷語逐字稿</h4><div id="dutch-transcript"></div></div>
-                <div class="transcript-box zh"><h4>中文翻譯</h4><div id="chinese-transcript"></div></div>
-            </div>
-        </div>
-    </section>
+    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
 
-    <section id="podcast" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">🎧 Podcast 推薦</h2>
-        <div class="filter-container" id="podcast-filters"></div>
-        <div id="podcast-list" class="dashboard-grid"></div>
-    </section>
+    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">💡 常用 500 單字練習</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
 
-    <section id="common-vocab" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">💡 常用 500 單字練習</h2>
-        <div id="common-vocab-list" class="vocab-grid"></div>
-    </section>
+    <section id="vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🔥 我的單字庫</h2><div id="my-vocab-list" class="vocab-grid"></div></section>
 
-    <section id="vocab" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">🔥 我的單字庫</h2>
-        <div id="my-vocab-list" class="vocab-grid"></div>
-    </section>
-
-    <section id="grammar" class="page">
-        <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
-        <h2 class="section-title">📚 文法基礎教學</h2>
-        <div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div>
-    </section>
-
+    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📚 文法基礎教學</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
 </div>
 
 <div id="translate-popup">
     <strong id="selected-word"></strong>
-    <p id="translation-result" style="margin: 5px 0; color: #666;"></p>
-    <button id="add-to-list">加入單字庫</button>
+    <p id="translation-result" style="margin: 5px 0; color: #666; font-size: 0.9rem;"></p>
+    <button id="add-to-list-btn">➕ 加入單字庫</button>
 </div>
 
-
+<div id="context-menu">
+    <div class="menu-item delete" id="ctx-delete"><span>🗑️</span> 刪除單字</div>
+</div>
 
 <script>
 // --- 1. SPA 與連動邏輯 ---
 let allPodcasts = [];
+let currentSelectedIndex = -1;
 
 function showPage(pageId, filterCategory = null) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-    document.getElementById(pageId).classList.add('active-page');
+    const target = document.getElementById(pageId);
+    if(target) target.classList.add('active-page');
     window.scrollTo(0, 0);
 
-    // 如果帶有篩選參數 (針對 Podcast)
     if (pageId === 'podcast' && filterCategory) {
         setTimeout(() => {
-            const btn = Array.from(document.querySelectorAll('.filter-btn'))
-                             .find(b => b.innerText.trim() === filterCategory);
+            const btn = Array.from(document.querySelectorAll('.filter-btn')).find(b => b.innerText.trim() === filterCategory);
             if (btn) filterPodcasts(filterCategory, btn);
         }, 100);
     }
 }
 
-function toggleMenu() {
-    document.getElementById('navLinks').classList.toggle('active');
-}
-
-// 渲染首頁推薦
-// 多接收一個 thumbUrl 參數
 function pushToHome(type, title, category, targetId, thumbUrl = "") {
     const home = document.getElementById('home-recommendation');
     if (home.innerHTML.includes("準備今日驚喜")) home.innerHTML = '';
 
-    // 如果有圖片網址，就加上 <img> 標籤
     const imgHtml = thumbUrl ? `<img src="${thumbUrl}" class="rec-thumb">` : "";
-
     home.innerHTML += `
         <div class="highlight-card" onclick="showPage('${targetId}')">
             ${imgHtml}
@@ -310,35 +165,19 @@ function pushToHome(type, title, category, targetId, thumbUrl = "") {
     `;
 }
 
-// --- 2. 資料載入功能 (新聞, 影片, Podcast, 單字, 文法) ---
+// --- 2. 資料載入 ---
 
 async function loadNews() {
     try {
         const res = await fetch('data/news.json');
         const data = await res.json();
         const area = document.getElementById('news-list');
-        area.innerHTML = ''; // 清空舊內容
-
+        area.innerHTML = '';
         data.forEach((art, i) => {
-            // 渲染到新聞分頁
-            // 在顯示新聞卡片的地方加上 source 標籤
-        area.innerHTML += `
-            <div class="content-card">
-                <span class="source-tag">${art.source}</span> 
-                <h3>${art.title}</h3>
-                <p>${art.content}</p>
-                <a href="${art.url}" target="_blank">閱讀全文 →</a>
-            </div>
-        `;
-            
-            // 如果是第一則，推送到首頁推薦 (維持妳原本的邏輯)
-            if (i === 0) {
-                pushToHome('今日新聞', art.title, art.source, 'news');
-            }
+            area.innerHTML += `<div class="content-card"><span class="source-tag">${art.source}</span><h3>${art.title}</h3><p>${art.content}</p><a href="${art.url}" target="_blank" style="color:#D94DFF;">閱讀全文 →</a></div>`;
+            if (i === 0) pushToHome('今日新聞', art.title, art.source, 'news');
         });
-    } catch (e) {
-        console.log("新聞載入失敗，可能 data/news.json 還沒生成", e);
-    }
+    } catch (e) { console.log("新聞載入失敗"); }
 }
 
 async function loadVideo() {
@@ -348,28 +187,14 @@ async function loadVideo() {
         const text = await res.text();
         const row = text.split('\n')[1].split(',');
         const [vUrl, title, nl, zh] = row;
-
-        // 💡 1. 提取影片 ID 並生成縮圖網址
-        let id = "";
-        if (vUrl.includes("v=")) {
-            id = vUrl.split("v=")[1].split("&")[0];
-        } else {
-            id = vUrl.split("be/")[1];
-        }
+        let id = vUrl.includes("v=") ? vUrl.split("v=")[1].split("&")[0] : vUrl.split("be/")[1];
         const thumbUrl = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
-
-        // 2. 渲染影片分頁 (原本的邏輯)
-        document.getElementById('video-player').innerHTML = `
-            <h3>${title}</h3>
-            <iframe width="100%" height="400" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>
-        `;
+        
+        document.getElementById('video-player').innerHTML = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
         document.getElementById('dutch-transcript').innerText = nl.replaceAll('|', '\n');
         document.getElementById('chinese-transcript').innerText = zh.replaceAll('|', '\n');
-
-        // 💡 3. 將縮圖網址傳給首頁推薦函數 (新增一個參數 thumbUrl)
         pushToHome('今日影片', title, '影音', 'video', thumbUrl);
-        
-    } catch (e) { console.log("影片載入失敗", e); }
+    } catch (e) { console.log("影片載入失敗"); }
 }
 
 async function loadPodcasts() {
@@ -380,31 +205,22 @@ async function loadPodcasts() {
         const rows = text.split('\n').slice(1);
         allPodcasts = rows.map(r => {
             const c = r.split(',');
-            return { title: c[0], link: c[1], desc: c[2], category: c[3]?.trim() || "精選" };
+            return { title: c[0], link: c[1], desc: c[2], category: c[3]?.trim() || "精選", imgUrl: c[4]?.trim() || "" };
         }).filter(i => i.title);
 
-        const cats = ["全部", ...new Set(allPodcasts.map(i => i.category))];
-        document.getElementById('podcast-filters').innerHTML = cats.map(c => `<button class="filter-btn ${c==='全部'?'active':''}" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
-        
+        document.getElementById('podcast-filters').innerHTML = ["全部", ...new Set(allPodcasts.map(i => i.category))].map(c => `<button class="filter-btn" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
         renderPodcasts(allPodcasts);
-        if (allPodcasts.length > 0) pushToHome('Podcast', allPodcasts[0].title, allPodcasts[0].category, 'podcast');
+        if (allPodcasts.length > 0) pushToHome('Podcast', allPodcasts[0].title, allPodcasts[0].category, 'podcast', allPodcasts[0].imgUrl);
     } catch (e) { console.log("Podcast 載入失敗"); }
 }
 
 function renderPodcasts(list) {
-    document.getElementById('podcast-list').innerHTML = list.map(i => `
-        <div class="content-card" style="border-left: 6px solid #D94DFF;">
-            <span class="highlight-tag">${i.category}</span>
-            <h3>${i.title}</h3>
-            <p style="font-size:0.9rem; color:#666;">${i.desc}</p>
-            <a href="${i.link}" target="_blank" style="color:#D94DFF; font-weight:bold; text-decoration:none;">🎧 收聽單集 →</a>
-        </div>
-    `).join('');
+    document.getElementById('podcast-list').innerHTML = list.map(i => `<div class="content-card" style="border-left: 6px solid #D94DFF;"><span class="highlight-tag">${i.category}</span><h3>${i.title}</h3><p style="font-size:0.9rem; color:#666;">${i.desc}</p><a href="${i.link}" target="_blank" style="color:#D94DFF; font-weight:bold;">🎧 收聽單集 →</a></div>`).join('');
 }
 
 function filterPodcasts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if(btn) btn.classList.add('active');
     const filtered = (cat === "全部") ? allPodcasts : allPodcasts.filter(i => i.category === cat);
     renderPodcasts(filtered);
 }
@@ -419,7 +235,7 @@ async function loadCommon500() {
             const [w, t] = r.split(',');
             return w ? `<div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">${w}</div><div class="flashcard-back">${t}</div></div></div>` : '';
         }).join('');
-    } catch (e) { console.log("500單字載入失敗"); }
+    } catch (e) { console.log("500單字失敗"); }
 }
 
 async function loadGrammar() {
@@ -432,32 +248,43 @@ async function loadGrammar() {
             const [u, t, l] = r.split(',');
             return u ? `<a href="${l}" target="_blank" class="dash-card" style="padding:15px; font-size:1rem; text-decoration:none;">Unit ${u}: ${t}</a>` : '';
         }).join('');
-    } catch (e) { console.log("文法載入失敗"); }
+    } catch (e) { console.log("文法失敗"); }
 }
 
-// --- 3. 翻譯與我的單字庫 ---
+// --- 3. 翻譯彈窗與單字庫 ---
+
 document.addEventListener('mouseup', async (e) => {
     const sel = window.getSelection().toString().trim();
     const popup = document.getElementById('translate-popup');
-    if (sel.length > 1) {
+    
+    if (sel.length > 0 && !popup.contains(e.target)) {
         popup.style.display = 'block';
-        popup.style.left = e.pageX + 'px';
-        popup.style.top = e.pageY + 'px';
+        popup.style.left = (e.pageX + 10) + 'px';
+        popup.style.top = (e.pageY + 10) + 'px';
         document.getElementById('selected-word').innerText = sel;
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${sel}&langpair=nl|zh-TW`);
-        const data = await res.json();
-        document.getElementById('translation-result').innerText = data.responseData.translatedText;
-    } else { popup.style.display = 'none'; }
+        document.getElementById('translation-result').innerText = "翻譯中...";
+        try {
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sel)}&langpair=nl|zh-TW`);
+            const data = await res.json();
+            document.getElementById('translation-result').innerText = data.responseData.translatedText;
+        } catch (err) { document.getElementById('translation-result').innerText = "翻譯失敗"; }
+    } else if (!popup.contains(e.target)) {
+        popup.style.display = 'none';
+    }
 });
 
-document.getElementById('add-to-list').onclick = () => {
+document.getElementById('add-to-list-btn').onclick = () => {
     const word = document.getElementById('selected-word').innerText;
     const trans = document.getElementById('translation-result').innerText;
-    const list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-    list.push({ word, trans });
-    localStorage.setItem('myVocab', JSON.stringify(list));
-    alert('已加入單字庫！');
-    loadFlashcards();
+    if (word && trans && trans !== "翻譯中...") {
+        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
+        if (!list.some(it => it.word === word)) {
+            list.push({ word, trans });
+            localStorage.setItem('myVocab', JSON.stringify(list));
+            alert('已存入單字庫！');
+            loadFlashcards();
+        }
+    }
 };
 
 function loadFlashcards() {
@@ -465,18 +292,41 @@ function loadFlashcards() {
     const area = document.getElementById('my-vocab-list');
     area.innerHTML = list.length ? '' : '<p>尚未存入單字</p>';
     list.forEach((it, idx) => {
-        area.innerHTML += `<div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">${it.word}</div><div class="flashcard-back">${it.trans}<button onclick="deleteWord(${idx}); event.stopPropagation();" style="margin-top:10px; background:white; color:#D94DFF; border:none; border-radius:4px; font-size:10px; cursor:pointer;">刪除</button></div></div></div>`;
+        area.innerHTML += `
+            <div class="flashcard" onclick="this.classList.toggle('flipped')" oncontextmenu="showContextMenu(event, ${idx})">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">${it.word}</div>
+                    <div class="flashcard-back">${it.trans}</div>
+                </div>
+            </div>`;
     });
 }
 
-function deleteWord(idx) {
-    let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-    list.splice(idx, 1);
-    localStorage.setItem('myVocab', JSON.stringify(list));
-    loadFlashcards();
+// --- 4. 右鍵選單邏輯 ---
+
+function showContextMenu(e, index) {
+    e.preventDefault();
+    currentSelectedIndex = index;
+    const menu = document.getElementById('context-menu');
+    menu.style.display = 'block';
+    menu.style.left = e.pageX + 'px';
+    menu.style.top = e.pageY + 'px';
 }
 
-// --- 4. 啟動 ---
+document.addEventListener('click', () => { document.getElementById('context-menu').style.display = 'none'; });
+
+document.getElementById('ctx-delete').onclick = () => {
+    if (currentSelectedIndex > -1) {
+        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
+        if (confirm(`確定要刪除「${list[currentSelectedIndex].word}」嗎？`)) {
+            list.splice(currentSelectedIndex, 1);
+            localStorage.setItem('myVocab', JSON.stringify(list));
+            loadFlashcards();
+        }
+    }
+};
+
+// --- 5. 啟動 ---
 window.onload = () => {
     loadNews();
     loadVideo();
@@ -486,10 +336,5 @@ window.onload = () => {
     loadFlashcards();
 };
 </script>
-<div id="context-menu">
-    <div class="menu-item delete" id="ctx-delete">
-        <span>🗑️</span> 刪除單字
-    </div>
-</div>
 </body>
 </html>

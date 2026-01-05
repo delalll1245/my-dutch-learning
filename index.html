@@ -32,7 +32,7 @@
         .rec-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
         .highlight-tag { background: #fdf5ff; color: var(--main-purple); border: 1px solid rgba(217, 77, 255, 0.3); padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
-        /* --- 4. 影片與對照框 --- */
+        /* --- 4. 影片清單與對照框 --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
         .video-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
         .video-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -48,16 +48,18 @@
         .zh-box .box-label { background: var(--amber-yellow); color: #444; }
         .transcript-text { font-size: 1rem; line-height: 1.8; color: #444; white-space: pre-line; max-height: 400px; overflow-y: auto; }
 
-        /* --- 5. Podcast 樣式 --- */
+        /* --- 5. Podcast 樣式升級 --- */
         .filter-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
         .filter-btn { background-color: white; color: var(--main-purple); border: 1.5px solid var(--main-purple); padding: 6px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .filter-btn.active { background-color: var(--main-purple); color: white; }
+
         #podcast-list .content-card { background: white; border: 1px solid #f0e6f5; border-radius: 16px; padding: 15px; border-left: 8px solid var(--main-purple); box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08); transition: 0.3s; display: flex; align-items: center; gap: 15px; height: 120px; overflow: hidden; }
         .podcast-thumb { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background-color: #eee; }
         .podcast-info { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
         .podcast-info h3 { margin: 5px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- 6. 單字卡與 UI --- */
+        /* --- 6. UI 元件 --- */
+        .back-btn { background: none; border: none; color: #666; font-size: 1rem; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
         .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .flashcard { height: 110px; perspective: 1000px; cursor: pointer; }
         .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
@@ -102,12 +104,13 @@
         <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
         <h2 class="section-title">✨ 今日內容推薦</h2>
         <div id="home-recommendation" class="highlight-container">
-            <p class="loading-text">正在為妳挑選今日套餐...</p>
+            <p class="loading-text">正在為妳挑選今日驚喜...</p>
         </div>
     </section>
 
     <section id="video-list-page" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📺 所有影片清單</h2><div id="video-grid" class="video-grid"></div></section>
     <section id="video-detail-page" class="page"><button class="back-btn" onclick="showPage('video-list-page')">← 返回影片列表</button><h2 class="section-title" id="detail-video-title">正在播放</h2><div class="content-card"><div id="video-player"></div><div class="transcript-container"><div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div><div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div></div></div></section>
+
     <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
     <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
     <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
@@ -119,8 +122,9 @@
 <div id="context-menu"><div class="menu-item" id="ctx-delete" style="color:red;">🗑️ 刪除單字</div></div>
 
 <script>
-// --- 核心資料池 ---
-let pool = { videos: [], podcasts: [], news: [], grammar: [] };
+let allVideos = [];
+let allPodcasts = [];
+let recommendationCandidates = [];
 let currentSelectedIndex = -1;
 
 function showPage(pageId, filterCategory = null) {
@@ -136,15 +140,13 @@ function showPage(pageId, filterCategory = null) {
     }
 }
 
-// 渲染推薦卡片 (支援多次呼叫)
 function pushToHome(type, title, category, targetId, thumbUrl = "", isVideo = false, vIdx = 0) {
     const home = document.getElementById('home-recommendation');
-    if (home.innerHTML.includes("挑選今日套餐")) home.innerHTML = '';
-
+    home.innerHTML = ''; // 每天只顯示一個
     const imgHtml = thumbUrl ? `<img src="${thumbUrl}" class="rec-thumb">` : "";
     const clickAction = isVideo ? `openVideoDetail(${vIdx})` : `showPage('${targetId}', '${category}')`;
     
-    home.innerHTML += `
+    home.innerHTML = `
         <div class="highlight-card" onclick="${clickAction}">
             ${imgHtml}
             <div class="rec-content">
@@ -155,15 +157,13 @@ function pushToHome(type, title, category, targetId, thumbUrl = "", isVideo = fa
         </div>`;
 }
 
-// --- 各項載入邏輯 ---
-
 async function loadNews() {
     try {
         const res = await fetch('data/news.json');
         const data = await res.json();
-        pool.news = data;
         document.getElementById('news-list').innerHTML = data.map(art => `
             <div class="content-card"><span class="source-tag">${art.source}</span><h3>${art.title}</h3><p>${art.content}</p><a href="${art.url}" target="_blank" style="color:var(--main-purple);">閱讀全文</a></div>`).join('');
+        if(data[0]) recommendationCandidates.push({ type: '今日新聞', title: data[0].title, category: data[0].source, targetId: 'news' });
     } catch(e) {}
 }
 
@@ -172,17 +172,18 @@ async function loadVideos() {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR8wPI8N4w0wlhmpmkpocU5EiYc9d3taHZKwCyZLhNgbqX1llerSDiK4Ic8V_pwkBzieJwOPRwDEjNT/pub?output=csv");
         const text = await res.text();
         const rows = text.split('\n').slice(1);
-        pool.videos = rows.map((r, i) => {
+        allVideos = rows.map(r => {
             const c = r.split(',');
             let id = c[0].includes("v=") ? c[0].split("v=")[1].split("&")[0] : c[0].split("be/")[1];
-            return { title: c[1], url: c[0], nl: c[2], zh: c[3], thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`, idx: i };
+            return { title: c[1], url: c[0], nl: c[2], zh: c[3], thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg` };
         });
-        document.getElementById('video-grid').innerHTML = pool.videos.map(v => `<div class="video-card" onclick="openVideoDetail(${v.idx})"><img src="${v.thumb}"><h4>${v.title}</h4></div>`).join('');
+        document.getElementById('video-grid').innerHTML = allVideos.map((v, i) => `<div class="video-card" onclick="openVideoDetail(${i})"><img src="${v.thumb}"><h4>${v.title}</h4></div>`).join('');
+        if(allVideos[0]) recommendationCandidates.push({ type: '今日影片', title: allVideos[0].title, category: '精選', targetId: 'video-detail-page', thumbUrl: allVideos[0].thumb, isVideo: true, vIdx: 0 });
     } catch(e) {}
 }
 
 function openVideoDetail(index) {
-    const v = pool.videos[index];
+    const v = allVideos[index];
     let id = v.url.includes("v=") ? v.url.split("v=")[1].split("&")[0] : v.url.split("be/")[1];
     document.getElementById('detail-video-title').innerText = `📺 ${v.title}`;
     document.getElementById('video-player').innerHTML = `<iframe width="100%" height="450" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
@@ -196,26 +197,29 @@ async function loadPodcasts() {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSd7GEHtv2OBGwouVB5_YMEVI8kuMxjhiOCVd5VeFjoFDvRpy1ae-h9_dXOPIJQ0d2Z0vWw47dhay0g/pub?output=csv");
         const text = await res.text();
         const rows = text.split('\n').slice(1);
-        pool.podcasts = rows.map(r => {
+        allPodcasts = rows.map(r => {
             const c = r.split(',');
             return { title: c[0], link: c[1], desc: c[2], category: c[3]?.trim() || "精選", imgUrl: c[4]?.trim() || "" };
         }).filter(i => i.title);
-        document.getElementById('podcast-filters').innerHTML = ["全部", ...new Set(pool.podcasts.map(i => i.category))].map(c => `<button class="filter-btn ${c==='全部'?'active':''}" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
-        renderPodcasts(pool.podcasts);
+        document.getElementById('podcast-filters').innerHTML = ["全部", ...new Set(allPodcasts.map(i => i.category))].map(c => `<button class="filter-btn ${c==='全部'?'active':''}" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
+        renderPodcasts(allPodcasts);
+        if(allPodcasts[0]) recommendationCandidates.push({ type: '推薦Podcast', title: allPodcasts[0].title, category: allPodcasts[0].category, targetId: 'podcast', thumbUrl: allPodcasts[0].imgUrl });
     } catch(e) {}
 }
 
 function renderPodcasts(list) {
-    document.getElementById('podcast-list').innerHTML = list.map(i => {
+    const area = document.getElementById('podcast-list');
+    if (!list.length) { area.innerHTML = '<p>目前沒有內容喔！</p>'; return; }
+    area.innerHTML = list.map(i => {
         const imageHtml = i.imgUrl ? `<img src="${i.imgUrl}" class="podcast-thumb">` : `<div class="podcast-thumb" style="display:flex;align-items:center;justify-content:center;background:#eee;">🎧</div>`;
         return `<div class="content-card">${imageHtml}<div class="podcast-info"><span class="highlight-tag" style="width:fit-content;">${i.category}</span><h3>${i.title}</h3><p style="font-size:0.85rem;color:#666;">${i.desc || ""}</p><a href="${i.link}" target="_blank" style="text-decoration:none;font-weight:bold;color:var(--main-purple);font-size:0.85rem;">收聽單集 →</a></div></div>`;
-    }).join('') || '<p>目前沒有內容喔！</p>';
+    }).join('');
 }
 
 function filterPodcasts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
-    renderPodcasts(cat === "全部" ? pool.podcasts : pool.podcasts.filter(i => i.category === cat));
+    renderPodcasts(cat === "全部" ? allPodcasts : allPodcasts.filter(i => i.category === cat));
 }
 
 async function loadGrammar() {
@@ -223,55 +227,25 @@ async function loadGrammar() {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8LXFgsWwIx-C2HjngRtz_do9bkNB_BJwR82EV17Gfeht6wDcvmprJan9FlEhi5X9wwrCNV6Vkzft/pub?output=csv");
         const text = await res.text();
         const rows = text.split('\n').slice(1);
-        pool.grammar = rows.map(r => r.split(',')).filter(r => r[0]);
-        document.getElementById('grammar-list-area').innerHTML = pool.grammar.map(r => 
-            `<a href="${r[2]}" target="_blank" class="dash-card" style="padding:15px;font-size:1rem;text-decoration:none;">Unit ${r[0]}: ${r[1]}</a>`
-        ).join('');
+        document.getElementById('grammar-list-area').innerHTML = rows.map(r => {
+            const [u, t, l] = r.split(',');
+            return u ? `<a href="${l}" target="_blank" class="dash-card" style="padding:15px;font-size:1rem;text-decoration:none;">Unit ${u}: ${t}</a>` : '';
+        }).join('');
+        const first = rows[0].split(',');
+        if(first[0]) recommendationCandidates.push({ type: '必學文法', title: `Unit ${first[0]}: ${first[1]}`, category: '基礎', targetId: 'grammar' });
     } catch(e) {}
 }
 
-// --- 每日四合一隨機邏輯 ---
-function displayDailyRecommendations() {
+function displayDailyRandom() {
+    if (!recommendationCandidates.length) return;
     const now = new Date();
     const offsetTime = new Date(now.getTime() - (9 * 60 * 60 * 1000));
     const seed = offsetTime.getFullYear() * 10000 + (offsetTime.getMonth() + 1) * 100 + offsetTime.getDate();
-
-    // 從每一類各挑選一個
-    if(pool.videos.length > 0) {
-        const v = pool.videos[seed % pool.videos.length];
-        pushToHome('今日影片', v.title, '精選', 'video-detail-page', v.thumb, true, v.idx);
-    }
-    if(pool.podcasts.length > 0) {
-        const p = pool.podcasts[(seed + 1) % pool.podcasts.length];
-        pushToHome('推薦Podcast', p.title, p.category, 'podcast', p.imgUrl);
-    }
-    if(pool.news.length > 0) {
-        const n = pool.news[(seed + 2) % pool.news.length];
-        pushToHome('今日新聞', n.title, n.source, 'news');
-    }
-    if(pool.grammar.length > 0) {
-        const g = pool.grammar[(seed + 3) % pool.grammar.length];
-        pushToHome('必學文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar');
-    }
+    const item = recommendationCandidates[seed % recommendationCandidates.length];
+    pushToHome(item.type, item.title, item.category, item.targetId, item.thumbUrl || "", item.isVideo, item.vIdx || 0);
 }
 
-// 單字庫與啟動
-function loadFlashcards() {
-    const list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-    document.getElementById('my-vocab-list').innerHTML = list.map((it, idx) => `
-        <div class="flashcard" onclick="this.classList.toggle('flipped')" oncontextmenu="showContextMenu(event, ${idx})">
-            <div class="flashcard-inner"><div class="flashcard-front">${it.word}</div><div class="flashcard-back">${it.trans}</div></div>
-        </div>`).join('') || '<p>尚未存入單字</p>';
-}
-
-async function init() {
-    await Promise.all([loadNews(), loadVideos(), loadPodcasts(), loadGrammar()]);
-    loadFlashcards();
-    displayDailyRecommendations();
-}
-window.onload = init;
-
-// (保留翻譯選單與右鍵刪除 JS...)
+// 翻譯與單字庫
 document.addEventListener('mouseup', async (e) => {
     const sel = window.getSelection().toString().trim();
     const popup = document.getElementById('translate-popup');
@@ -285,6 +259,7 @@ document.addEventListener('mouseup', async (e) => {
         } catch (err) { document.getElementById('translation-result').innerText = "翻譯失敗"; }
     } else if (!popup.contains(e.target)) { popup.style.display = 'none'; }
 });
+
 document.getElementById('add-to-list-btn').onclick = () => {
     const word = document.getElementById('selected-word').innerText;
     const trans = document.getElementById('translation-result').innerText;
@@ -296,6 +271,15 @@ document.getElementById('add-to-list-btn').onclick = () => {
         }
     }
 };
+
+function loadFlashcards() {
+    const list = JSON.parse(localStorage.getItem('myVocab') || '[]');
+    document.getElementById('my-vocab-list').innerHTML = list.map((it, idx) => `
+        <div class="flashcard" onclick="this.classList.toggle('flipped')" oncontextmenu="showContextMenu(event, ${idx})">
+            <div class="flashcard-inner"><div class="flashcard-front">${it.word}</div><div class="flashcard-back">${it.trans}</div></div>
+        </div>`).join('') || '<p>尚未存入單字</p>';
+}
+
 function showContextMenu(e, index) { e.preventDefault(); currentSelectedIndex = index; const menu = document.getElementById('context-menu'); menu.style.display = 'block'; menu.style.left = e.pageX + 'px'; menu.style.top = e.pageY + 'px'; }
 document.addEventListener('click', () => { document.getElementById('context-menu').style.display = 'none'; });
 document.getElementById('ctx-delete').onclick = () => {
@@ -304,6 +288,13 @@ document.getElementById('ctx-delete').onclick = () => {
         if (confirm(`確定刪除？`)) { list.splice(currentSelectedIndex, 1); localStorage.setItem('myVocab', JSON.stringify(list)); loadFlashcards(); }
     }
 };
+
+async function init() {
+    await Promise.all([loadNews(), loadVideos(), loadPodcasts(), loadGrammar()]);
+    loadFlashcards();
+    displayDailyRandom();
+}
+window.onload = init;
 </script>
 </body>
 </html>

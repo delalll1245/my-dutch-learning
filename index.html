@@ -223,14 +223,15 @@ async function loadNews() {
 
         data.forEach((art, i) => {
             // 渲染到新聞分頁
-            area.innerHTML += `
-                <div class="content-card">
-                    <span class="source-tag">${art.source}</span> 
-                    <h3>${art.title}</h3>
-                    <p>${art.content}</p>
-                    <a href="${art.url}" target="_blank" style="color:#D94DFF; font-size:0.9rem;">閱讀原文 →</a>
-                </div>
-            `;
+            // 在顯示新聞卡片的地方加上 source 標籤
+        area.innerHTML += `
+            <div class="content-card">
+                <span class="source-tag">${art.source}</span> 
+                <h3>${art.title}</h3>
+                <p>${art.content}</p>
+                <a href="${art.url}" target="_blank">閱讀全文 →</a>
+            </div>
+        `;
             
             // 如果是第一則，推送到首頁推薦 (維持妳原本的邏輯)
             if (i === 0) {

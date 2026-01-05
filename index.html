@@ -74,58 +74,62 @@
         .menu-item:hover { background: #fdf5ff; color: var(--main-purple); }
 
         @media (max-width: 768px) { .transcript-container { flex-direction: column; } .highlight-card { flex-direction: column; align-items: flex-start; } .rec-thumb { width: 100%; height: 150px; margin-right: 0; margin-bottom: 10px; } .dashboard-grid { grid-template-columns: 1fr; } }
-           /* --- 🎧 Podcast 卡片美化升級 --- */
+                /* --- 🎧 Podcast 卡片美化與排版修正 --- */
         #podcast-list .content-card {
             background: white;
-            border: 1px solid #f0e6f5; /* 極淺的紫色邊框 */
-            border-radius: 16px;       /* 更圓潤的圓角 */
-            padding: 20px;
-            margin-bottom: 0;          /* 交給 grid 的 gap 處理 */
-            border-left: 8px solid var(--main-purple); /* 保留妳喜歡的側邊條，但縮小一點 */
-            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.05);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;             /* 讓卡片高度整齊 */
+            border: 1px solid #f0e6f5;
+            border-radius: 16px;
+            padding: 15px;
+            border-left: 8px solid var(--main-purple);
+            box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08);
+            transition: 0.3s;
+            display: flex; /* 改為橫向排列 */
+            align-items: center;
+            gap: 15px; /* 圖片與文字的間距 */
+            height: 120px; /* 固定高度，讓排版整齊 */
+            overflow: hidden;
         }
         
         #podcast-list .content-card:hover {
-            transform: translateY(-8px); /* 往上飄移 */
-            box-shadow: 0 10px 25px rgba(217, 77, 255, 0.15); /* 陰影加深 */
-            border-left-width: 12px;     /* 移上去時側邊條變粗，增加動感 */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(217, 77, 255, 0.15);
         }
         
-        /* 卡片內的標題與描述 */
-        #podcast-list h3 {
-            margin: 10px 0;
-            color: var(--deep-purple);
-            font-size: 1.25rem;
+        /* Podcast 專屬縮圖 */
+        .podcast-thumb {
+            width: 90px;
+            height: 90px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0; /* 防止圖片被壓扁 */
+            background-color: #eee; /* 沒圖時的底色 */
         }
         
-        #podcast-list p {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.5;
-            flex-grow: 1; /* 讓文字撐開空間 */
+        /* 卡片內的文字內容區 */
+        .podcast-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0; /* 防止文字爆開 */
         }
         
-        /* 收聽按鈕美化 */
-        .listen-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--main-purple);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 15px;
-            padding: 8px 0;
-            transition: 0.2s;
+        .podcast-info h3 {
+            margin: 5px 0;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* 標題太長自動變 ... */
         }
         
-        .listen-link:hover {
-            letter-spacing: 1px; /* 移上去時文字稍微撐開 */
+        /* 修正容器底部留白，解決「突出背景」問題 */
+        .container {
+            padding-bottom: 100px; /* 增加底部空間 */
+        }
+        
+        /* 增加卡片上下間距 */
+        #podcast-list.dashboard-grid {
+            gap: 25px 20px; /* 第一個數字是上下排間距 */
         }
     </style>
 </head>
@@ -284,12 +288,31 @@ async function loadPodcasts() {
 function renderPodcasts(list) {
     const area = document.getElementById('podcast-list');
     
-    // 如果沒有資料，顯示提示
     if (list.length === 0) {
-        area.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">目前沒有這個類別的 Podcast 喔！</p>';
+        area.innerHTML = '<p style="text-align:center; grid-column:1/-1;">目前沒有相關內容喔！</p>';
         return;
     }
 
+    area.innerHTML = list.map(i => {
+        // 如果試算表沒填圖片，就用一個預設的紫色方塊或圖示
+        const imageHtml = i.imgUrl 
+            ? `<img src="${i.imgUrl}" class="podcast-thumb" alt="Cover">`
+            : `<div class="podcast-thumb" style="display:flex; align-items:center; justify-content:center; background:#f0e6f5; color:var(--main-purple); font-size:2rem;">🎧</div>`;
+
+        return `
+            <div class="content-card">
+                ${imageHtml}
+                <div class="podcast-info">
+                    <span class="highlight-tag" style="width: fit-content;">${i.category}</span>
+                    <h3>${i.title}</h3>
+                    <p style="font-size:0.85rem; color:#666; margin:0;">${i.desc || ""}</p>
+                    <a href="${i.link}" target="_blank" class="listen-link" style="margin-top:5px; text-decoration:none; font-weight:bold; font-size:0.85rem; color:var(--main-purple);">
+                        收聽單集 →
+                    </a>
+                </div>
+            </div>`;
+    }).join('');
+}
     area.innerHTML = list.map(i => `
         <div class="content-card">
             <div>

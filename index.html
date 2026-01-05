@@ -202,7 +202,25 @@
 
     <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞閱讀</h2><div id="news-list"></div></section>
     
-    <section id="video" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📺 每日短片推薦</h2><div id="video-content" class="content-card"><div id="video-player"></div><div class="transcript-grid"><div class="transcript-box nl"><h4>荷語逐字稿</h4><div id="dutch-transcript"></div></div><div class="transcript-box zh"><h4>中文翻譯</h4><div id="chinese-transcript"></div></div></div></div></section>
+   <section id="video" class="page">
+    <button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button>
+    <h2 class="section-title">📺 每日短片推薦</h2>
+    
+    <div id="video-content" class="content-card">
+        <div id="video-player" style="border-radius: 12px; overflow: hidden; margin-bottom: 20px;"></div>
+        
+        <div class="transcript-container">
+            <div class="transcript-column nl-box">
+                <span class="box-label">荷語逐字稿</span>
+                <div id="dutch-transcript" class="transcript-text">正在載入荷語原文...</div>
+            </div>
+            <div class="transcript-column zh-box">
+                <span class="box-label">中文翻譯</span>
+                <div id="chinese-transcript" class="transcript-text">正在載入中文翻譯...</div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
 
@@ -279,18 +297,33 @@ async function loadVideo() {
     try {
         const res = await fetch(url);
         const text = await res.text();
+        // 抓取試算表第二行 (Index 1)
         const row = text.split('\n')[1].split(',');
         const [vUrl, title, nl, zh] = row;
+
+        // 1. 處理影片 ID 與首頁縮圖
         let id = vUrl.includes("v=") ? vUrl.split("v=")[1].split("&")[0] : vUrl.split("be/")[1];
         const thumbUrl = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
-        
-        document.getElementById('video-player').innerHTML = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+
+        // 2. 嵌入播放器
+        document.getElementById('video-player').innerHTML = `
+            <iframe width="100%" height="450" src="https://www.youtube.com/embed/${id}" 
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen></iframe>
+        `;
+
+        // 3. ✨ 渲染逐字稿與翻譯 (將 | 替換為 \n)
         document.getElementById('dutch-transcript').innerText = nl.replaceAll('|', '\n');
         document.getElementById('chinese-transcript').innerText = zh.replaceAll('|', '\n');
-        pushToHome('今日影片', title, '影音', 'video', thumbUrl);
-    } catch (e) { console.log("影片載入失敗"); }
-}
 
+        // 4. 更新首頁推薦
+        pushToHome('今日影片', title, '影音', 'video', thumbUrl);
+        
+    } catch (e) { 
+        console.log("影片載入失敗", e);
+        document.getElementById('dutch-transcript').innerText = "暫無資料";
+    }
+}
 async function loadPodcasts() {
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd7GEHtv2OBGwouVB5_YMEVI8kuMxjhiOCVd5VeFjoFDvRpy1ae-h9_dXOPIJQ0d2Z0vWw47dhay0g/pub?output=csv";
     try {

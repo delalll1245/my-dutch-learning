@@ -72,6 +72,75 @@
         .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
         
         @media (max-width: 768px) { .transcript-container { flex-direction: column; } #podcast-list .content-card { height: auto; flex-direction: column; align-items: flex-start; } .podcast-thumb { width: 100%; height: 150px; } }
+    /* --- 1. Podcast 卡片懸浮與美化 --- */
+        #podcast-list .content-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        box-shadow 0.3s ease, 
+                        border-color 0.3s ease;
+            will-change: transform;
+        }
+        
+        #podcast-list .content-card:hover {
+            transform: translateY(-10px) scale(1.02); /* 更動態的浮起 */
+            box-shadow: 0 15px 35px rgba(217, 77, 255, 0.2); /* 更深邃的紫色陰影 */
+            border-color: var(--main-purple); /* 邊框顏色變亮 */
+        }
+        
+        /* --- 2. 返回首頁按鈕：極簡優化 --- */
+        .back-btn {
+            background: none !important;
+            border: none !important;
+            color: #888;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+        
+        .back-btn:hover {
+            color: var(--main-purple);
+            transform: translateX(-5px); /* 輕微往左滑動，暗示「返回」 */
+        }
+        
+        .back-btn::before {
+            content: '←'; /* 也可以換成更漂亮的圖示文字 */
+            font-size: 1.2rem;
+        }
+        
+        /* --- 3. 加入單字庫按鈕：精品化 --- */
+        #add-to-list-btn {
+            background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 30px; /* 更圓潤的膠囊造型 */
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        #add-to-list-btn:hover {
+            transform: scale(1.03); /* 輕微放大 */
+            box-shadow: 0 6px 20px rgba(217, 77, 255, 0.5);
+            filter: brightness(1.1); /* 變亮感 */
+        }
+        
+        #add-to-list-btn:active {
+            transform: scale(0.97); /* 點擊時的下壓感 */
+        }
     </style>
 </head>
 <body>

@@ -32,12 +32,58 @@
         .rec-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
         .highlight-tag { background: #fdf5ff; color: var(--main-purple); border: 1px solid rgba(217, 77, 255, 0.3); padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
-        /* --- 4. 影片清單與紫黃對照框 --- */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .video-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
-        .video-card img { width: 100%; height: 120px; object-fit: cover; }
-        .video-card h4 { padding: 10px; font-size: 0.9rem; margin: 0; color: var(--deep-purple); }
-
+                /* --- 4. 影片清單與紫黃對照框 --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 自動適應寬度 */
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .video-card {
+            background: white;
+            border-radius: 16px; /* 更圓潤的圓角 */
+            overflow: hidden;
+            border: 1px solid #f0e6f5;
+            cursor: pointer;
+            /* 💡 這是懸浮動力的祕密：貝茲曲線讓動作更流暢 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 懸浮時的華麗轉身 */
+        .video-card:hover {
+            transform: translateY(-10px) scale(1.02); /* 向上浮起並微放 */
+            box-shadow: 0 15px 30px rgba(217, 77, 255, 0.2); /* 加深紫色霓虹陰影 */
+            border-color: var(--main-purple);
+        }
+        
+        /* 影片縮圖的細節處理 */
+        .video-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            transition: transform 0.5s ease; /* 圖片也要有縮放感 */
+        }
+        
+        .video-card:hover img {
+            transform: scale(1.1); /* 懸浮時圖片微放，增加張力 */
+        }
+        
+        /* 影片標題美化 */
+        .video-card h4 {
+            padding: 15px;
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--deep-purple);
+            font-weight: bold;
+            line-height: 1.4;
+            background: white;
+            flex-grow: 1;
+            z-index: 2; /* 確保文字在圖片上面 */
+        }
         .transcript-container { display: flex; gap: 20px; margin-top: 25px; }
         .transcript-column { flex: 1; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .box-label { display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; }
@@ -313,8 +359,11 @@
 
     <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🎧 Podcast</h2><div id="podcast-filters" class="filter-container"></div><div id="podcast-list" class="dashboard-grid"></div></section>
     <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
-    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
-</div>
+    <section id="grammar" class="page">
+    <button class="back-btn" onclick="showPage('home-page')">返回首頁</button>
+    <h2 class="section-title">📚 文法基礎教學</h2>
+    <div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div>
+    </section>
 
 <div id="quiz-settings-modal" class="modal">
     <div class="modal-content">
@@ -455,7 +504,13 @@ async function loadVideos() {
             const c = r.split(','); let id = c[0].includes("v=") ? c[0].split("v=")[1].split("&")[0] : c[0].split("be/")[1];
             return { title: c[1], url: c[0], nl: c[2], zh: c[3], thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`, idx: i };
         });
-        document.getElementById('video-grid').innerHTML = pool.videos.map(v => `<div class="video-card" onclick="openVideoDetail(${v.idx})"><img src="${v.thumb}"><h4>${v.title}</h4></div>`).join('');
+      // 在 loadVideos() 裡面渲染列表的部分
+        document.getElementById('video-grid').innerHTML = allVideos.map((v, i) => `
+            <div class="video-card" onclick="openVideoDetail(${i})">
+                <div style="overflow:hidden;"> <img src="${v.thumb}">
+                </div>
+                <h4>${v.title}</h4>
+            </div>`).join('');
     } catch(e){}
 }
 
@@ -508,14 +563,39 @@ function loadFlashcards() {
             <div class="flashcard-inner"><div class="flashcard-front">${i.word}</div><div class="flashcard-back">${i.trans}</div></div>
         </div>`).join('') || '<p>尚未存入單字</p>';
 }
-
+async function loadGrammar() {
+    // 💡 妳的文法試算表 CSV 連結
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8LXFgsWwIx-C2HjngRtz_do9bkNB_BJwR82EV17Gfeht6wDcvmprJan9FlEhi5X9wwrCNV6Vkzft/pub?output=csv";
+    try {
+        const res = await fetch(url);
+        const text = await res.text();
+        const rows = text.split('\n').slice(1); // 跳過第一行標題
+        
+        // 將資料存入 pool 以便後續隨機推薦使用
+        pool.grammar = rows.map(r => r.split(',')).filter(r => r[0]); 
+        
+        // 渲染到文法分頁的網格中
+        document.getElementById('grammar-list-area').innerHTML = pool.grammar.map(r => 
+            `<a href="${r[2]}" target="_blank" class="dash-card" style="padding:15px; font-size:1rem; text-decoration:none;">
+                Unit ${r[0]}: ${r[1]}
+            </a>`
+        ).join('');
+    } catch (e) {
+        console.error("文法載入失敗", e);
+    }
+}
 // 每日隨機推薦 (四合一)
 function displayDailyRecommendations() {
     const seed = (new Date(new Date().getTime() - 9*3600000)).toISOString().slice(0,10).replace(/-/g,'');
     const home = document.getElementById('home-recommendation'); home.innerHTML = '';
     if(pool.videos.length){ const v = pool.videos[seed % pool.videos.length]; pushToHome('今日影片', v.title, '精選', 'video-detail-page', v.thumb, true, v.idx); }
     if(pool.podcasts.length){ const p = pool.podcasts[(seed+1) % pool.podcasts.length]; pushToHome('推薦Podcast', p.title, p.category, 'podcast', p.imgUrl); }
-}
+// 在 displayDailyRecommendations 函數內的部分
+    if(pool.grammar.length > 0) {
+        // 根據日期種子 (seed+3) 選出當天的推薦文法
+        const g = pool.grammar[(seed + 3) % pool.grammar.length];
+        pushToHome('必學文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar');}
+    }
 
 function pushToHome(type, title, category, targetId, thumbUrl="", isVideo=false, vIdx=0) {
     const home = document.getElementById('home-recommendation');

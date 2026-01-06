@@ -51,7 +51,66 @@
         .filter-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
         .filter-btn { background-color: white; color: var(--main-purple); border: 1.5px solid var(--main-purple); padding: 6px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .filter-btn.active { background-color: var(--main-purple); color: white; }
-        #podcast-list .content-card { background: white; border: 1px solid #f0e6f5; border-radius: 16px; padding: 15px; border-left: 8px solid var(--main-purple); box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08); transition: 0.3s; display: flex; align-items: center; gap: 15px; height: 120px; overflow: hidden; }
+               /* --- 1. Podcast 類別標籤美化 --- */
+        .highlight-tag {
+            background: #fdf5ff;
+            color: var(--main-purple);
+            border: 1px solid rgba(217, 77, 255, 0.3);
+            padding: 3px 12px;
+            border-radius: 20px; /* 膠囊造型 */
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        /* --- 2. Podcast 卡片懸浮變化 --- */
+        #podcast-list .content-card {
+            background: white;
+            border: 1px solid #f0e6f5;
+            border-radius: 16px;
+            padding: 15px;
+            border-left: 8px solid var(--main-purple);
+            box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 帶有彈性的浮起 */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 125px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        #podcast-list .content-card:hover {
+            transform: translateY(-8px) scale(1.02); /* 向上浮起並輕微放大 */
+            box-shadow: 0 15px 30px rgba(217, 77, 255, 0.15); /* 加深紫色陰影 */
+            border-color: var(--main-purple);
+        }
+        
+        /* 當卡片被懸浮時，裡面的標籤也會跟著變色 */
+        #podcast-list .content-card:hover .highlight-tag {
+            background: var(--main-purple);
+            color: white;
+        }
+        
+        /* --- 3. 點擊連結 (收聽按鈕) 的美化 --- */
+        .listen-link {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--main-purple);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .listen-link:hover {
+            gap: 10px; /* 滑鼠移上去時，箭頭會往右推開 */
+            filter: brightness(0.8); /* 顏色微深 */
+        }
         .podcast-thumb { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background-color: #eee; }
 
         /* --- 6. 單字卡與測驗勾選 --- */
@@ -66,13 +125,108 @@
         .test-action-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); display: none; z-index: 1001; align-items: center; gap: 20px; border: 2px solid var(--main-purple); }
 
         /* --- 7. 美化按鈕與彈窗 --- */
-        .back-btn { background: none !important; border: none !important; color: #888 !important; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .back-btn:hover { color: var(--main-purple) !important; transform: translateX(-5px); }
-        .back-btn::before { content: '←'; font-weight: bold; }
-
-        #add-to-list-btn, .btn-primary { background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important; color: white !important; border: none !important; padding: 12px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3); }
-        #add-to-list-btn:hover, .btn-primary:hover { transform: scale(1.03); filter: brightness(1.1); }
-        #add-to-list-btn:active, .btn-primary:active { transform: scale(0.95); }
+               /* --- 1. 返回按鈕共通美化 (返回首頁、返回列表) --- */
+        .back-btn {
+            background: none !important;
+            border: none !important;
+            color: #888 !important;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+        
+        .back-btn:hover {
+            color: var(--main-purple) !important;
+            transform: translateX(-5px); /* 懸停時往左滑動，暗示返回 */
+        }
+        
+        /* 用 CSS 自動加上精緻的箭頭圖示 */
+        .back-btn::before {
+            content: '←';
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* --- 翻譯彈窗：玻璃擬態與漸層按鈕 --- */
+        #translate-popup {
+            display: none;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+            border: 1px solid rgba(217, 77, 255, 0.3);
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 2500;
+            border-radius: 16px;
+            width: 240px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        #add-to-list-btn {
+            background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important;
+            color: white !important;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 30px; /* 膠囊造型 */
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        #add-to-list-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px rgba(217, 77, 255, 0.5);
+        }
+        
+        #add-to-list-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* --- 右鍵選單樣式 --- */
+        #context-menu {
+            display: none;
+            position: absolute;
+            z-index: 3000;
+            background: white;
+            border: 1px solid var(--main-purple);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            width: 140px;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .menu-item:hover {
+            background: #fdf5ff;
+            color: var(--main-purple);
+        }
+        
+        .menu-item.delete {
+            color: #ff4d4d;
+        }
+        
+        .menu-item.delete:hover {
+            background: #fff5f5;
+        }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
@@ -393,7 +547,95 @@ async function init() {
     await Promise.all([loadVideos(), loadPodcasts()]);
     loadCommon500(); loadFlashcards(); displayDailyRecommendations();
 }
+
+    // --- A. 反白翻譯與彈窗邏輯 ---
+document.addEventListener('mouseup', async (e) => {
+    const sel = window.getSelection().toString().trim();
+    const popup = document.getElementById('translate-popup');
+    
+    // 如果有選取文字，且點擊的不是彈窗內部
+    if (sel.length > 0 && !popup.contains(e.target)) {
+        popup.style.display = 'block';
+        popup.style.left = (e.pageX + 10) + 'px';
+        popup.style.top = (e.pageY + 10) + 'px';
+        
+        document.getElementById('selected-word').innerText = sel;
+        document.getElementById('translation-result').innerText = "Vertaalt... (翻譯中)";
+        
+        try {
+            // 使用 MyMemory API (荷語轉繁中)
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sel)}&langpair=nl|zh-TW`);
+            const data = await res.json();
+            document.getElementById('translation-result').innerText = data.responseData.translatedText;
+        } catch (err) {
+            document.getElementById('translation-result').innerText = "無法取得翻譯";
+        }
+    } else if (!popup.contains(e.target)) {
+        popup.style.display = 'none';
+    }
+});
+
+// --- B. 點擊按鈕存入單字庫 ---
+document.getElementById('add-to-list-btn').onclick = () => {
+    const word = document.getElementById('selected-word').innerText;
+    const trans = document.getElementById('translation-result').innerText;
+    
+    if (word && trans && trans !== "Vertaalt... (翻譯中)") {
+        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
+        
+        if (!list.some(it => it.word === word)) {
+            list.push({ word, trans });
+            localStorage.setItem('myVocab', JSON.stringify(list));
+            alert(`已存入單字庫：${word}`);
+            if (typeof loadFlashcards === "function") loadFlashcards(); // 即時更新介面
+        } else {
+            alert('這個單字已經在單字庫裡囉！');
+        }
+    }
+};
+
+// --- C. 右鍵選單邏輯 (刪除功能) ---
+let currentDeleteIndex = -1;
+
+function showContextMenu(e, index) {
+    e.preventDefault();
+    currentDeleteIndex = index;
+    const menu = document.getElementById('context-menu');
+    menu.style.display = 'block';
+    menu.style.left = e.pageX + 'px';
+    menu.style.top = e.pageY + 'px';
+}
+
+// 點擊任何地方隱藏右鍵選單
+document.addEventListener('click', () => {
+    document.getElementById('context-menu').style.display = 'none';
+});
+
+// 執行刪除
+document.getElementById('ctx-delete').onclick = () => {
+    if (currentDeleteIndex > -1) {
+        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
+        const wordToDelete = list[currentDeleteIndex].word;
+        
+        if (confirm(`確定要刪除「${wordToDelete}」嗎？`)) {
+            list.splice(currentDeleteIndex, 1);
+            localStorage.setItem('myVocab', JSON.stringify(list));
+            if (typeof loadFlashcards === "function") loadFlashcards();
+        }
+    }
+};
 window.onload = init;
 </script>
+    <div id="translate-popup">
+    <strong id="selected-word"></strong>
+    <p id="translation-result" style="margin: 8px 0; color: #666; font-size: 0.95rem; line-height: 1.4;"></p>
+    <button id="add-to-list-btn">✨ 加入單字庫</button>
+</div>
+
+<div id="context-menu">
+    <div class="menu-item delete" id="ctx-delete">
+        <span>🗑️</span> 刪除單字
+    </div>
+</div>
 </body>
 </html>

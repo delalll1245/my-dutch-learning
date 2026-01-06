@@ -9,7 +9,7 @@
         :root { --main-purple: #D94DFF; --bg-purple: #f8f5fa; --deep-purple: #4A148C; --amber-yellow: #FFC107; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: var(--bg-purple); color: #333; }
         header { background: var(--main-purple); color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 10px rgba(217, 77, 255, 0.2); cursor: pointer; }
-        .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); min-height: 85vh; padding-bottom: 100px; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); min-height: 85vh; padding-bottom: 120px; }
         
         /* --- 2. 導覽列 --- */
         nav { background: #333; color: white; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
@@ -21,7 +21,7 @@
         .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 3. 首頁 Dashboard 與推薦卡片 --- */
+        /* --- 3. 首頁推薦與排版 --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px 20px; margin-top: 20px; }
         .dash-card { background: #fff; border: 2px solid var(--main-purple); color: var(--deep-purple); padding: 30px 20px; text-align: center; border-radius: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .dash-card:hover { background: var(--main-purple); color: white; transform: translateY(-5px); }
@@ -32,10 +32,9 @@
         .rec-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
         .highlight-tag { background: #fdf5ff; color: var(--main-purple); border: 1px solid rgba(217, 77, 255, 0.3); padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
-        /* --- 4. 影片清單與對照框 --- */
+        /* --- 4. 影片清單與紫黃對照框 --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
         .video-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
-        .video-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .video-card img { width: 100%; height: 120px; object-fit: cover; }
         .video-card h4 { padding: 10px; font-size: 0.9rem; margin: 0; color: var(--deep-purple); }
 
@@ -48,99 +47,41 @@
         .zh-box .box-label { background: var(--amber-yellow); color: #444; }
         .transcript-text { font-size: 1rem; line-height: 1.8; color: #444; white-space: pre-line; max-height: 400px; overflow-y: auto; }
 
-        /* --- 5. Podcast 樣式升級 --- */
+        /* --- 5. Podcast 膠囊標籤與卡片 --- */
         .filter-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
         .filter-btn { background-color: white; color: var(--main-purple); border: 1.5px solid var(--main-purple); padding: 6px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .filter-btn.active { background-color: var(--main-purple); color: white; }
-
         #podcast-list .content-card { background: white; border: 1px solid #f0e6f5; border-radius: 16px; padding: 15px; border-left: 8px solid var(--main-purple); box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08); transition: 0.3s; display: flex; align-items: center; gap: 15px; height: 120px; overflow: hidden; }
         .podcast-thumb { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background-color: #eee; }
-        .podcast-info { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-        .podcast-info h3 { margin: 5px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- 6. UI 元件 --- */
-        .back-btn { background: none; border: none; color: #666; font-size: 1rem; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
-        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .flashcard { height: 110px; perspective: 1000px; cursor: pointer; }
+        /* --- 6. 單字卡與測驗勾選 --- */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 10px 0; }
+        .flashcard { height: 110px; perspective: 1000px; cursor: pointer; position: relative; }
         .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; border: 1px solid #eee; font-weight: bold; }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; border: 1px solid #eee; box-sizing: border-box; font-weight: bold; }
         .flashcard-front { background: white; color: var(--deep-purple); }
         .flashcard-back { background: var(--main-purple); color: white; transform: rotateY(180deg); }
-        #translate-popup { display: none; position: absolute; background: white; border: 1px solid var(--main-purple); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2500; border-radius: 12px; width: 220px; }
-        #context-menu { display: none; position: absolute; z-index: 3000; background: white; border: 1px solid var(--main-purple); border-radius: 8px; width: 130px; }
-        .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
+        .vocab-checkbox { position: absolute; top: 10px; right: 10px; z-index: 10; width: 20px; height: 20px; accent-color: var(--main-purple); }
+        .test-action-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); display: none; z-index: 1001; align-items: center; gap: 20px; border: 2px solid var(--main-purple); }
+
+        /* --- 7. 美化按鈕與彈窗 --- */
+        .back-btn { background: none !important; border: none !important; color: #888 !important; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .back-btn:hover { color: var(--main-purple) !important; transform: translateX(-5px); }
+        .back-btn::before { content: '←'; font-weight: bold; }
+
+        #add-to-list-btn, .btn-primary { background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important; color: white !important; border: none !important; padding: 12px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3); }
+        #add-to-list-btn:hover, .btn-primary:hover { transform: scale(1.03); filter: brightness(1.1); }
+        #add-to-list-btn:active, .btn-primary:active { transform: scale(0.95); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
         
-        @media (max-width: 768px) { .transcript-container { flex-direction: column; } #podcast-list .content-card { height: auto; flex-direction: column; align-items: flex-start; } .podcast-thumb { width: 100%; height: 150px; } }
-    /* --- 1. Podcast 卡片懸浮與美化 --- */
-        #podcast-list .content-card {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        box-shadow 0.3s ease, 
-                        border-color 0.3s ease;
-            will-change: transform;
-        }
-        
-        #podcast-list .content-card:hover {
-            transform: translateY(-10px) scale(1.02); /* 更動態的浮起 */
-            box-shadow: 0 15px 35px rgba(217, 77, 255, 0.2); /* 更深邃的紫色陰影 */
-            border-color: var(--main-purple); /* 邊框顏色變亮 */
-        }
-        
-        /* --- 2. 返回首頁按鈕：極簡優化 --- */
-        .back-btn {
-            background: none !important;
-            border: none !important;
-            color: #888;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 25px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            padding: 5px 0;
-        }
-        
-        .back-btn:hover {
-            color: var(--main-purple);
-            transform: translateX(-5px); /* 輕微往左滑動，暗示「返回」 */
-        }
-        
-        .back-btn::before {
-            content: '←'; /* 也可以換成更漂亮的圖示文字 */
-            font-size: 1.2rem;
-        }
-        
-        /* --- 3. 加入單字庫按鈕：精品化 --- */
-        #add-to-list-btn {
-            background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            width: 100%;
-            border-radius: 30px; /* 更圓潤的膠囊造型 */
-            font-weight: bold;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        #add-to-list-btn:hover {
-            transform: scale(1.03); /* 輕微放大 */
-            box-shadow: 0 6px 20px rgba(217, 77, 255, 0.5);
-            filter: brightness(1.1); /* 變亮感 */
-        }
-        
-        #add-to-list-btn:active {
-            transform: scale(0.97); /* 點擊時的下壓感 */
-        }
+        #quiz-container { text-align: center; max-width: 600px; margin: 0 auto; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .option-btn { padding: 15px; border: 2px solid #eee; border-radius: 12px; background: white; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .option-btn:hover { border-color: var(--main-purple); background: #fdf5ff; }
+        .fill-input { width: 100%; padding: 15px; font-size: 1.2rem; border-radius: 12px; border: 2px solid #eee; text-align: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -161,7 +102,7 @@
 
 <div class="container">
     <section id="home-page" class="page active-page">
-        <h2 class="section-title">Welkom! 妳今天想學什麼？</h2>
+        <h2 class="section-title">Welkom! 今天想學什麼？</h2>
         <div class="dashboard-grid">
             <div class="dash-card" onclick="showPage('news')">📰 今日新聞</div>
             <div class="dash-card" onclick="showPage('video-list-page')">📺 精選影片</div>
@@ -172,88 +113,200 @@
         </div>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
         <h2 class="section-title">✨ 今日內容推薦</h2>
-        <div id="home-recommendation" class="highlight-container">
-            <p class="loading-text">正在為妳挑選今日驚喜...</p>
+        <div id="home-recommendation" class="highlight-container">正在為妳準備今日套餐...</div>
+    </section>
+
+    <section id="video-list-page" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📺 所有影片清單</h2><div id="video-grid" class="video-grid"></div></section>
+    <section id="video-detail-page" class="page">
+        <button class="back-btn" onclick="showPage('video-list-page')">返回影片列表</button>
+        <h2 class="section-title" id="detail-video-title">正在播放</h2>
+        <div class="content-card">
+            <div id="video-player"></div>
+            <div class="transcript-container">
+                <div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div>
+                <div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div>
+            </div>
         </div>
     </section>
 
-    <section id="video-list-page" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📺 所有影片清單</h2><div id="video-grid" class="video-grid"></div></section>
-    <section id="video-detail-page" class="page"><button class="back-btn" onclick="showPage('video-list-page')">← 返回影片列表</button><h2 class="section-title" id="detail-video-title">正在播放</h2><div class="content-card"><div id="video-player"></div><div class="transcript-container"><div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div><div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div></div></div></section>
+    <section id="common-vocab" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button class="back-btn" onclick="showPage('home-page')">返回首頁</button>
+            <button class="btn-primary" onclick="toggleSelectionMode()">📝 進入測驗模式</button>
+        </div>
+        <h2 class="section-title">💡 常用 500 單字</h2>
+        <div id="common-vocab-list" class="vocab-grid"></div>
+    </section>
 
-    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
-    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
-    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
-    <section id="vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🔥 我的單字庫</h2><div id="my-vocab-list" class="vocab-grid"></div></section>
-    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
+    <section id="vocab" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button class="back-btn" onclick="showPage('home-page')">返回首頁</button>
+            <button class="btn-primary" onclick="toggleSelectionMode()">📝 進入測驗模式</button>
+        </div>
+        <h2 class="section-title">🔥 我的單字庫</h2>
+        <div id="my-vocab-list" class="vocab-grid"></div>
+    </section>
+
+    <section id="quiz-page" class="page">
+        <button class="back-btn" onclick="quitQuiz()">放棄測驗</button>
+        <div id="quiz-container">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:bold; color:var(--main-purple);">
+                <span id="quiz-progress">題數: --</span> <span id="quiz-score">分數: 0</span> <span id="quiz-timer">時間: --</span>
+            </div>
+            <div id="quiz-content"></div>
+        </div>
+    </section>
+
+    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🎧 Podcast</h2><div id="podcast-filters" class="filter-container"></div><div id="podcast-list" class="dashboard-grid"></div></section>
+    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
+    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
 </div>
 
-<div id="translate-popup"><strong id="selected-word"></strong><p id="translation-result"></p><button id="add-to-list-btn">➕ 加入單字庫</button></div>
-<div id="context-menu"><div class="menu-item" id="ctx-delete" style="color:red;">🗑️ 刪除單字</div></div>
+<div id="quiz-settings-modal" class="modal">
+    <div class="modal-content">
+        <h3 style="border-bottom:2px solid var(--main-purple); padding-bottom:10px;">⚙️ 測驗設定</h3>
+        <p>已選擇 <b id="max-q-count">0</b> 個單字</p>
+        <div style="margin:15px 0;">
+            <label>題數:</label> <input type="number" id="quiz-count" min="1" style="width:50px;">
+        </div>
+        <div style="margin:15px 0;">
+            <label>時間:</label>
+            <select id="quiz-time">
+                <option value="10">10 秒</option><option value="20">20 秒</option><option value="30">30 秒</option>
+                <option value="40">40 秒</option><option value="50">50 秒</option><option value="60">60 秒</option><option value="0">不限</option>
+            </select>
+        </div>
+        <div style="margin:15px 0;">
+            <input type="checkbox" id="type-mc" checked> 選擇題 <input type="checkbox" id="type-fill" checked> 填充題
+        </div>
+        <button class="btn-primary" style="width:100%;" onclick="startQuiz()">🔥 開始測驗</button>
+        <button onclick="document.getElementById('quiz-settings-modal').style.display='none'" style="width:100%; background:none; border:none; margin-top:10px; cursor:pointer;">取消</button>
+    </div>
+</div>
+
+<div id="test-action-bar" class="test-action-bar">
+    <span>已勾選 <b id="selected-count">0</b> 個單字</span>
+    <button class="btn-primary" onclick="openQuizSettings()">設定測驗</button>
+</div>
+
+<div id="translate-popup"><strong id="selected-word"></strong><p id="translation-result" style="margin:5px 0; color:#666; font-size:0.9rem;"></p><button id="add-to-list-btn">➕ 加入單字庫</button></div>
+<div id="context-menu"><div class="menu-item" id="ctx-delete" style="color:red; padding:10px; cursor:pointer;">🗑️ 刪除單字</div></div>
+
+
 
 <script>
-let allVideos = [];
-let allPodcasts = [];
-let recommendationCandidates = [];
-let currentSelectedIndex = -1;
+// --- 核心變數 ---
+let pool = { videos: [], podcasts: [], news: [], grammar: [], common500: [], myVocab: [] };
+let isSelectionMode = false;
+let selectedWords = [];
+let quizQueue = [], currentQuizIdx = 0, quizScore = 0, quizTimer = null;
 
+// SPA 控制
 function showPage(pageId, filterCategory = null) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
     const target = document.getElementById(pageId);
     if(target) target.classList.add('active-page');
     window.scrollTo(0, 0);
-    if (pageId === 'podcast' && filterCategory) {
-        setTimeout(() => {
-            const btn = Array.from(document.querySelectorAll('.filter-btn')).find(b => b.innerText.trim() === filterCategory);
-            if (btn) filterPodcasts(filterCategory, btn);
-        }, 100);
+    if (isSelectionMode) toggleSelectionMode();
+}
+
+// 測驗勾選邏輯
+function toggleSelectionMode() {
+    isSelectionMode = !isSelectionMode;
+    document.getElementById('test-action-bar').style.display = isSelectionMode ? 'flex' : 'none';
+    selectedWords = [];
+    document.getElementById('selected-count').innerText = 0;
+    const page = document.querySelector('.page.active-page').id;
+    if (page === 'common-vocab') loadCommon500();
+    if (page === 'vocab') loadFlashcards();
+}
+
+function handleWordSelect(word, trans, checkbox) {
+    if (checkbox.checked) selectedWords.push({ word, trans });
+    else selectedWords = selectedWords.filter(i => i.word !== word);
+    document.getElementById('selected-count').innerText = selectedWords.length;
+}
+
+function openQuizSettings() {
+    if (!selectedWords.length) return alert('請先勾選單字！');
+    document.getElementById('max-q-count').innerText = selectedWords.length;
+    document.getElementById('quiz-count').value = Math.min(10, selectedWords.length);
+    document.getElementById('quiz-settings-modal').style.display = 'flex';
+}
+
+// 測驗引擎
+function startQuiz() {
+    const count = parseInt(document.getElementById('quiz-count').value);
+    const timeLimit = parseInt(document.getElementById('quiz-time').value);
+    const mc = document.getElementById('type-mc').checked, fill = document.getElementById('type-fill').checked;
+    if (!mc && !fill) return alert('請選擇題型！');
+
+    const shuffled = [...selectedWords].sort(() => 0.5 - Math.random()).slice(0, count);
+    quizQueue = shuffled.map(i => ({ 
+        ...i, 
+        type: (mc && fill) ? (Math.random() > 0.5 ? 'MC' : 'FILL') : (mc ? 'MC' : 'FILL'),
+        dir: Math.random() > 0.5 ? 'NL_ZH' : 'ZH_NL'
+    }));
+
+    currentQuizIdx = 0; quizScore = 0;
+    document.getElementById('quiz-settings-modal').style.display = 'none';
+    showPage('quiz-page');
+    renderQuestion(timeLimit);
+}
+
+function renderQuestion(timeLimit) {
+    clearInterval(quizTimer);
+    const item = quizQueue[currentQuizIdx];
+    const content = document.getElementById('quiz-content');
+    document.getElementById('quiz-progress').innerText = `第 ${currentQuizIdx+1}/${quizQueue.length} 題`;
+
+    let timeLeft = timeLimit;
+    if (timeLimit > 0) {
+        quizTimer = setInterval(() => {
+            document.getElementById('quiz-timer').innerText = `時間: ${timeLeft}s`;
+            if (--timeLeft < 0) { clearInterval(quizTimer); handleAnswer(false, '時間到！', timeLimit); }
+        }, 1000);
+    } else document.getElementById('quiz-timer').innerText = '時間: 不限';
+
+    let q = item.dir === 'NL_ZH' ? item.word : item.trans;
+    let a = item.dir === 'NL_ZH' ? item.trans : item.word;
+
+    if (item.type === 'MC') {
+        let others = selectedWords.filter(i => i.word !== item.word).map(i => item.dir === 'NL_ZH' ? i.trans : i.word).sort(() => 0.5 - Math.random()).slice(0, 3);
+        let opts = [a, ...others].sort(() => 0.5 - Math.random());
+        content.innerHTML = `<h2 style="margin:40px 0;">${q}</h2><div class="quiz-options">${opts.map(o => `<button class="option-btn" onclick="handleAnswer('${o}'==='${a}', '', ${timeLimit})">${o}</button>`).join('')}</div>`;
+    } else {
+        content.innerHTML = `<h2 style="margin:40px 0;">${q}</h2><input type="text" id="quiz-input" class="fill-input" placeholder="請輸入翻譯..."><br><button class="btn-primary" onclick="checkFill('${a}', ${timeLimit})">送出</button>`;
+        document.getElementById('quiz-input').focus();
     }
 }
 
-function pushToHome(type, title, category, targetId, thumbUrl = "", isVideo = false, vIdx = 0) {
-    const home = document.getElementById('home-recommendation');
-    home.innerHTML = ''; // 每天只顯示一個
-    const imgHtml = thumbUrl ? `<img src="${thumbUrl}" class="rec-thumb">` : "";
-    const clickAction = isVideo ? `openVideoDetail(${vIdx})` : `showPage('${targetId}', '${category}')`;
-    
-    home.innerHTML = `
-        <div class="highlight-card" onclick="${clickAction}">
-            ${imgHtml}
-            <div class="rec-content">
-                <span class="highlight-tag">${type} · ${category}</span>
-                <h3 style="margin:5px 0; color:#4A148C;">${title}</h3>
-            </div>
-            <span style="color:var(--main-purple); font-weight:bold; margin-left:10px;">→</span>
-        </div>`;
+function checkFill(ans, limit) { handleAnswer(document.getElementById('quiz-input').value.trim().toLowerCase() === ans.toLowerCase(), `正確答案: ${ans}`, limit); }
+
+function handleAnswer(isRight, msg, limit) {
+    clearInterval(quizTimer);
+    if (isRight) { quizScore += 10; alert('答對了！✨'); } else alert('答錯了... 😢 ' + msg);
+    if (++currentQuizIdx < quizQueue.length) renderQuestion(limit);
+    else { alert(`測驗結束！總分: ${quizScore}`); showPage('home-page'); }
 }
 
-async function loadNews() {
-    try {
-        const res = await fetch('data/news.json');
-        const data = await res.json();
-        document.getElementById('news-list').innerHTML = data.map(art => `
-            <div class="content-card"><span class="source-tag">${art.source}</span><h3>${art.title}</h3><p>${art.content}</p><a href="${art.url}" target="_blank" style="color:var(--main-purple);">閱讀全文</a></div>`).join('');
-        if(data[0]) recommendationCandidates.push({ type: '今日新聞', title: data[0].title, category: data[0].source, targetId: 'news' });
-    } catch(e) {}
-}
+function quitQuiz() { if (confirm('確定放棄？')) { clearInterval(quizTimer); showPage('home-page'); } }
 
+// --- 資料載入 ---
 async function loadVideos() {
     try {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR8wPI8N4w0wlhmpmkpocU5EiYc9d3taHZKwCyZLhNgbqX1llerSDiK4Ic8V_pwkBzieJwOPRwDEjNT/pub?output=csv");
-        const text = await res.text();
-        const rows = text.split('\n').slice(1);
-        allVideos = rows.map(r => {
-            const c = r.split(',');
-            let id = c[0].includes("v=") ? c[0].split("v=")[1].split("&")[0] : c[0].split("be/")[1];
-            return { title: c[1], url: c[0], nl: c[2], zh: c[3], thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg` };
+        const rows = (await res.text()).split('\n').slice(1);
+        pool.videos = rows.map((r, i) => {
+            const c = r.split(','); let id = c[0].includes("v=") ? c[0].split("v=")[1].split("&")[0] : c[0].split("be/")[1];
+            return { title: c[1], url: c[0], nl: c[2], zh: c[3], thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`, idx: i };
         });
-        document.getElementById('video-grid').innerHTML = allVideos.map((v, i) => `<div class="video-card" onclick="openVideoDetail(${i})"><img src="${v.thumb}"><h4>${v.title}</h4></div>`).join('');
-        if(allVideos[0]) recommendationCandidates.push({ type: '今日影片', title: allVideos[0].title, category: '精選', targetId: 'video-detail-page', thumbUrl: allVideos[0].thumb, isVideo: true, vIdx: 0 });
-    } catch(e) {}
+        document.getElementById('video-grid').innerHTML = pool.videos.map(v => `<div class="video-card" onclick="openVideoDetail(${v.idx})"><img src="${v.thumb}"><h4>${v.title}</h4></div>`).join('');
+    } catch(e){}
 }
 
-function openVideoDetail(index) {
-    const v = allVideos[index];
-    let id = v.url.includes("v=") ? v.url.split("v=")[1].split("&")[0] : v.url.split("be/")[1];
+function openVideoDetail(idx) {
+    const v = pool.videos[idx]; let id = v.url.includes("v=") ? v.url.split("v=")[1].split("&")[0] : v.url.split("be/")[1];
     document.getElementById('detail-video-title').innerText = `📺 ${v.title}`;
     document.getElementById('video-player').innerHTML = `<iframe width="100%" height="450" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
     document.getElementById('dutch-transcript').innerText = v.nl.replaceAll('|', '\n');
@@ -264,104 +317,81 @@ function openVideoDetail(index) {
 async function loadPodcasts() {
     try {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSd7GEHtv2OBGwouVB5_YMEVI8kuMxjhiOCVd5VeFjoFDvRpy1ae-h9_dXOPIJQ0d2Z0vWw47dhay0g/pub?output=csv");
-        const text = await res.text();
-        const rows = text.split('\n').slice(1);
-        allPodcasts = rows.map(r => {
-            const c = r.split(',');
-            return { title: c[0], link: c[1], desc: c[2], category: c[3]?.trim() || "精選", imgUrl: c[4]?.trim() || "" };
-        }).filter(i => i.title);
-        document.getElementById('podcast-filters').innerHTML = ["全部", ...new Set(allPodcasts.map(i => i.category))].map(c => `<button class="filter-btn ${c==='全部'?'active':''}" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
-        renderPodcasts(allPodcasts);
-        if(allPodcasts[0]) recommendationCandidates.push({ type: '推薦Podcast', title: allPodcasts[0].title, category: allPodcasts[0].category, targetId: 'podcast', thumbUrl: allPodcasts[0].imgUrl });
-    } catch(e) {}
+        const rows = (await res.text()).split('\n').slice(1);
+        pool.podcasts = rows.map(r => { const c = r.split(','); return { title: c[0], link: c[1], desc: c[2], category: c[3]?.trim() || "精選", imgUrl: c[4]?.trim() || "" }; }).filter(i => i.title);
+        document.getElementById('podcast-filters').innerHTML = ["全部", ...new Set(pool.podcasts.map(i => i.category))].map(c => `<button class="filter-btn" onclick="filterPodcasts('${c}', this)">${c}</button>`).join('');
+        renderPodcasts(pool.podcasts);
+    } catch(e){}
 }
 
 function renderPodcasts(list) {
-    const area = document.getElementById('podcast-list');
-    if (!list.length) { area.innerHTML = '<p>目前沒有內容喔！</p>'; return; }
-    area.innerHTML = list.map(i => {
-        const imageHtml = i.imgUrl ? `<img src="${i.imgUrl}" class="podcast-thumb">` : `<div class="podcast-thumb" style="display:flex;align-items:center;justify-content:center;background:#eee;">🎧</div>`;
-        return `<div class="content-card">${imageHtml}<div class="podcast-info"><span class="highlight-tag" style="width:fit-content;">${i.category}</span><h3>${i.title}</h3><p style="font-size:0.85rem;color:#666;">${i.desc || ""}</p><a href="${i.link}" target="_blank" style="text-decoration:none;font-weight:bold;color:var(--main-purple);font-size:0.85rem;">收聽單集 →</a></div></div>`;
-    }).join('');
+    document.getElementById('podcast-list').innerHTML = list.map(i => `<div class="content-card" style="border-left:8px solid var(--main-purple);"><img src="${i.imgUrl||''}" class="podcast-thumb"><div class="podcast-info"><span class="highlight-tag">${i.category}</span><h3>${i.title}</h3><a href="${i.link}" target="_blank" style="color:var(--main-purple); font-weight:bold; text-decoration:none;">🎧 收聽</a></div></div>`).join('');
 }
 
 function filterPodcasts(cat, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-    renderPodcasts(cat === "全部" ? allPodcasts : allPodcasts.filter(i => i.category === cat));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active');
+    renderPodcasts(cat === "全部" ? pool.podcasts : pool.podcasts.filter(i => i.category === cat));
 }
 
-async function loadGrammar() {
+async function loadCommon500() {
     try {
-        const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8LXFgsWwIx-C2HjngRtz_do9bkNB_BJwR82EV17Gfeht6wDcvmprJan9FlEhi5X9wwrCNV6Vkzft/pub?output=csv");
-        const text = await res.text();
-        const rows = text.split('\n').slice(1);
-        document.getElementById('grammar-list-area').innerHTML = rows.map(r => {
-            const [u, t, l] = r.split(',');
-            return u ? `<a href="${l}" target="_blank" class="dash-card" style="padding:15px;font-size:1rem;text-decoration:none;">Unit ${u}: ${t}</a>` : '';
-        }).join('');
-        const first = rows[0].split(',');
-        if(first[0]) recommendationCandidates.push({ type: '必學文法', title: `Unit ${first[0]}: ${first[1]}`, category: '基礎', targetId: 'grammar' });
-    } catch(e) {}
+        const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pub?output=csv");
+        const rows = (await res.text()).split('\n').slice(1);
+        pool.common500 = rows.map(r => { const [w, t] = r.split(','); return { word: w, trans: t }; }).filter(i => i.word);
+        document.getElementById('common-vocab-list').innerHTML = pool.common500.map(i => `
+            <div class="flashcard" onclick="${isSelectionMode?'':"this.classList.toggle('flipped')" }">
+                ${isSelectionMode?`<input type="checkbox" class="vocab-checkbox" onchange="handleWordSelect('${i.word}','${i.trans}',this)">`:''}
+                <div class="flashcard-inner"><div class="flashcard-front">${i.word}</div><div class="flashcard-back">${i.trans}</div></div>
+            </div>`).join('');
+    } catch(e){}
 }
-
-function displayDailyRandom() {
-    if (!recommendationCandidates.length) return;
-    const now = new Date();
-    const offsetTime = new Date(now.getTime() - (9 * 60 * 60 * 1000));
-    const seed = offsetTime.getFullYear() * 10000 + (offsetTime.getMonth() + 1) * 100 + offsetTime.getDate();
-    const item = recommendationCandidates[seed % recommendationCandidates.length];
-    pushToHome(item.type, item.title, item.category, item.targetId, item.thumbUrl || "", item.isVideo, item.vIdx || 0);
-}
-
-// 翻譯與單字庫
-document.addEventListener('mouseup', async (e) => {
-    const sel = window.getSelection().toString().trim();
-    const popup = document.getElementById('translate-popup');
-    if (sel.length > 0 && !popup.contains(e.target)) {
-        popup.style.display = 'block'; popup.style.left = (e.pageX + 10) + 'px'; popup.style.top = (e.pageY + 10) + 'px';
-        document.getElementById('selected-word').innerText = sel;
-        try {
-            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sel)}&langpair=nl|zh-TW`);
-            const data = await res.json();
-            document.getElementById('translation-result').innerText = data.responseData.translatedText;
-        } catch (err) { document.getElementById('translation-result').innerText = "翻譯失敗"; }
-    } else if (!popup.contains(e.target)) { popup.style.display = 'none'; }
-});
-
-document.getElementById('add-to-list-btn').onclick = () => {
-    const word = document.getElementById('selected-word').innerText;
-    const trans = document.getElementById('translation-result').innerText;
-    if (word && trans) {
-        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-        if (!list.some(it => it.word === word)) {
-            list.push({ word, trans }); localStorage.setItem('myVocab', JSON.stringify(list));
-            alert('已存入單字庫！'); loadFlashcards();
-        }
-    }
-};
 
 function loadFlashcards() {
-    const list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-    document.getElementById('my-vocab-list').innerHTML = list.map((it, idx) => `
-        <div class="flashcard" onclick="this.classList.toggle('flipped')" oncontextmenu="showContextMenu(event, ${idx})">
-            <div class="flashcard-inner"><div class="flashcard-front">${it.word}</div><div class="flashcard-back">${it.trans}</div></div>
+    const list = JSON.parse(localStorage.getItem('myVocab') || '[]'); pool.myVocab = list;
+    document.getElementById('my-vocab-list').innerHTML = list.map((i, idx) => `
+        <div class="flashcard" onclick="${isSelectionMode?'':"this.classList.toggle('flipped')" }" oncontextmenu="${isSelectionMode?'':`showContextMenu(event, ${idx})`}">
+            ${isSelectionMode?`<input type="checkbox" class="vocab-checkbox" onchange="handleWordSelect('${i.word}','${i.trans}',this)">`:''}
+            <div class="flashcard-inner"><div class="flashcard-front">${i.word}</div><div class="flashcard-back">${i.trans}</div></div>
         </div>`).join('') || '<p>尚未存入單字</p>';
 }
 
-function showContextMenu(e, index) { e.preventDefault(); currentSelectedIndex = index; const menu = document.getElementById('context-menu'); menu.style.display = 'block'; menu.style.left = e.pageX + 'px'; menu.style.top = e.pageY + 'px'; }
-document.addEventListener('click', () => { document.getElementById('context-menu').style.display = 'none'; });
-document.getElementById('ctx-delete').onclick = () => {
-    if (currentSelectedIndex > -1) {
-        let list = JSON.parse(localStorage.getItem('myVocab') || '[]');
-        if (confirm(`確定刪除？`)) { list.splice(currentSelectedIndex, 1); localStorage.setItem('myVocab', JSON.stringify(list)); loadFlashcards(); }
-    }
+// 每日隨機推薦 (四合一)
+function displayDailyRecommendations() {
+    const seed = (new Date(new Date().getTime() - 9*3600000)).toISOString().slice(0,10).replace(/-/g,'');
+    const home = document.getElementById('home-recommendation'); home.innerHTML = '';
+    if(pool.videos.length){ const v = pool.videos[seed % pool.videos.length]; pushToHome('今日影片', v.title, '精選', 'video-detail-page', v.thumb, true, v.idx); }
+    if(pool.podcasts.length){ const p = pool.podcasts[(seed+1) % pool.podcasts.length]; pushToHome('推薦Podcast', p.title, p.category, 'podcast', p.imgUrl); }
+}
+
+function pushToHome(type, title, category, targetId, thumbUrl="", isVideo=false, vIdx=0) {
+    const home = document.getElementById('home-recommendation');
+    home.innerHTML += `<div class="highlight-card" onclick="${isVideo?`openVideoDetail(${vIdx})`:`showPage('${targetId}')`}">
+        <img src="${thumbUrl}" class="rec-thumb"><div class="rec-content"><span class="highlight-tag">${type}</span><h3>${title}</h3></div><span>→</span></div>`;
+}
+
+// 翻譯與單字庫邏輯
+document.addEventListener('mouseup', async (e) => {
+    const sel = window.getSelection().toString().trim(); const popup = document.getElementById('translate-popup');
+    if (sel.length > 0 && !popup.contains(e.target)) {
+        popup.style.display = 'block'; popup.style.left = (e.pageX + 10) + 'px'; popup.style.top = (e.pageY + 10) + 'px';
+        document.getElementById('selected-word').innerText = sel;
+        try { const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sel)}&langpair=nl|zh-TW`);
+        const data = await res.json(); document.getElementById('translation-result').innerText = data.responseData.translatedText; } catch(err){}
+    } else if (!popup.contains(e.target)) popup.style.display = 'none';
+});
+
+document.getElementById('add-to-list-btn').onclick = () => {
+    const word = document.getElementById('selected-word').innerText, trans = document.getElementById('translation-result').innerText;
+    let list = JSON.parse(localStorage.getItem('myVocab') || '[]'); list.push({ word, trans }); localStorage.setItem('myVocab', JSON.stringify(list));
+    alert('已存入單字庫！'); loadFlashcards();
 };
 
+function showContextMenu(e, idx) { e.preventDefault(); let menu = document.getElementById('context-menu'); menu.style.display='block'; menu.style.left=e.pageX+'px'; menu.style.top=e.pageY+'px'; document.getElementById('ctx-delete').onclick=()=>{ let list=JSON.parse(localStorage.getItem('myVocab')); list.splice(idx,1); localStorage.setItem('myVocab',JSON.stringify(list)); loadFlashcards(); }; }
+document.addEventListener('click', () => document.getElementById('context-menu').style.display='none');
+
 async function init() {
-    await Promise.all([loadNews(), loadVideos(), loadPodcasts(), loadGrammar()]);
-    loadFlashcards();
-    displayDailyRandom();
+    await Promise.all([loadVideos(), loadPodcasts()]);
+    loadCommon500(); loadFlashcards(); displayDailyRecommendations();
 }
 window.onload = init;
 </script>

@@ -116,7 +116,7 @@ def scrape_google_sheet():
 # --- 總整合執行 ---
 
 def main():
-    print("嘟仔巡邏隊出動！")
+    print("巡邏隊出動！")
     final_news = []
     
     # 抓取並合併資料

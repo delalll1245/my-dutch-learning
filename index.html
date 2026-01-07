@@ -438,7 +438,56 @@ function filterPodcasts(cat, btn) {
     if(btn) btn.classList.add('active');
     renderPodcasts(cat === "全部" ? pool.podcasts : pool.podcasts.filter(i => i.category === cat));
 }
+async function loadCommon500() {
+    // 💡 請再次確認這個連結在瀏覽器直接開啟時，會自動下載一個 .csv 檔案
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pub?output=csv";
+    
+    try {
+        console.log("正在連線 500 單資料庫...");
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("網路請求失敗");
+        
+        const text = await res.text();
+        const rows = text.split('\n').slice(1); // 跳過標題列
+        
+        // 修正解析邏輯：確保每一行都有內容才處理
+        pool.common500 = rows.map(r => {
+            const cols = r.split(',');
+            // 抓取 A 欄和 B 欄，並過濾掉可能的多餘引號
+            return { 
+                word: cols[0]?.replace(/"/g, '').trim(), 
+                trans: cols[1]?.replace(/"/g, '').trim() 
+            };
+        }).filter(item => item.word && item.trans); // 確保單字與翻譯都不為空
 
+        console.log(`成功載入 ${pool.common500.length} 個 500 單單字`);
+        renderCommonVocab(); // 呼叫獨立的渲染函數
+    } catch (e) {
+        console.error("500單載入失敗，錯誤訊息：", e);
+        document.getElementById('common-vocab-list').innerHTML = `<p style="color:red; text-align:center;">資料載入失敗，請檢查網路或 Google 試算表發佈設定。</p>`;
+    }
+}
+
+// 獨立出來的渲染函數，確保測驗模式切換時也能正確呼叫
+function renderCommonVocab() {
+    const area = document.getElementById('common-vocab-list');
+    if (!pool.common500 || pool.common500.length === 0) return;
+
+    area.innerHTML = pool.common500.map(i => `
+        <div class="flashcard ${isSelectionMode ? 'selection-active' : ''}" 
+             onclick="${isSelectionMode ? '' : 'this.classList.toggle(\'flipped\')'}">
+            
+            ${isSelectionMode ? `
+                <input type="checkbox" class="vocab-checkbox" 
+                       onchange="handleWordSelect('${i.word.replace(/'/g, "\\'")}', '${i.trans.replace(/'/g, "\\'")}', this)">
+            ` : ''}
+            
+            <div class="flashcard-inner">
+                <div class="flashcard-front">${i.word}</div>
+                <div class="flashcard-back">${i.trans}</div>
+            </div>
+        </div>`).join('');
+}
 async function loadGrammar() {
     try {
         const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8LXFgsWwIx-C2HjngRtz_do9bkNB_BJwR82EV17Gfeht6wDcvmprJan9FlEhi5X9wwrCNV6Vkzft/pub?output=csv");

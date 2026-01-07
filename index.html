@@ -52,11 +52,86 @@
         .filter-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
         .filter-btn { background-color: white; color: var(--main-purple); border: 1.5px solid var(--main-purple); padding: 6px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .filter-btn.active { background-color: var(--main-purple); color: white; }
-        #podcast-list .content-card { background: white; border: 1px solid #f0e6f5; border-radius: 16px; padding: 15px; border-left: 8px solid var(--main-purple); box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08); transition: 0.3s; display: flex; align-items: center; gap: 15px; height: 120px; overflow: hidden; }
-        .podcast-thumb { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background-color: #eee; }
-        .podcast-info { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-        .podcast-info h3 { margin: 5px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+        /* --- 1. Podcast 卡片懸浮與美化 --- */
+        #podcast-list .content-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        box-shadow 0.3s ease, 
+                        border-color 0.3s ease;
+            will-change: transform;
+        }
+        
+        #podcast-list .content-card:hover {
+            transform: translateY(-10px) scale(1.02); /* 更動態的浮起 */
+            box-shadow: 0 15px 35px rgba(217, 77, 255, 0.2); /* 更深邃的紫色陰影 */
+            border-color: var(--main-purple); /* 邊框顏色變亮 */
+        }
+        
+        /* --- 2. 返回首頁按鈕：極簡優化 --- */
+              /* --- 1. 返回按鈕共通美化 (返回首頁、返回列表) --- */
+        .back-btn {
+            background: none !important;
+            border: none !important;
+            color: #888 !important;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+        
+        .back-btn:hover {
+            color: var(--main-purple) !important;
+            transform: translateX(-5px); /* 懸停時往左滑動，暗示返回 */
+        }
+        
+        /* 用 CSS 自動加上精緻的箭頭圖示 */
+        .back-btn::before {
+            content: '←';
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* --- 2. 加入單字庫按鈕精品化 --- */
+        #add-to-list-btn {
+            background: linear-gradient(135deg, var(--main-purple), #B83DFF) !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 30px; /* 圓潤膠囊造型 */
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        #add-to-list-btn:hover {
+            transform: scale(1.03); /* 輕微放大 */
+            box-shadow: 0 6px 20px rgba(217, 77, 255, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        #add-to-list-btn:active {
+            transform: scale(0.95); /* 點擊時下壓感 */
+        }
+        
+        /* 翻譯彈窗微調：讓它更有透明玻璃質感 */
+        #translate-popup {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+            border: 1px solid rgba(217, 77, 255, 0.3);
+            border-radius: 16px;
+        }
         /* --- 6. 單字卡與 UI --- */
         .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .flashcard { height: 110px; perspective: 1000px; cursor: pointer; }
@@ -106,13 +181,13 @@
         </div>
     </section>
 
-    <section id="video-list-page" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📺 所有影片清單</h2><div id="video-grid" class="video-grid"></div></section>
-    <section id="video-detail-page" class="page"><button class="back-btn" onclick="showPage('video-list-page')">← 返回影片列表</button><h2 class="section-title" id="detail-video-title">正在播放</h2><div class="content-card"><div id="video-player"></div><div class="transcript-container"><div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div><div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div></div></div></section>
-    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
-    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
-    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
-    <section id="vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">🔥 我的單字庫</h2><div id="my-vocab-list" class="vocab-grid"></div></section>
-    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">← 返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
+    <section id="video-list-page" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📺 所有影片清單</h2><div id="video-grid" class="video-grid"></div></section>
+    <section id="video-detail-page" class="page"><button class="back-btn" onclick="showPage('video-list-page')">返回影片列表</button><h2 class="section-title" id="detail-video-title">正在播放</h2><div class="content-card"><div id="video-player"></div><div class="transcript-container"><div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div><div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div></div></div></section>
+    <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
+    <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
+    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
+    <section id="vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🔥 我的單字庫</h2><div id="my-vocab-list" class="vocab-grid"></div></section>
+    <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
 </div>
 
 <div id="translate-popup"><strong id="selected-word"></strong><p id="translation-result"></p><button id="add-to-list-btn">➕ 加入單字庫</button></div>

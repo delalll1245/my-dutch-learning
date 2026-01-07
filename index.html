@@ -176,23 +176,64 @@
             border-radius: 16px;
         }
         /* --- 6. 單字卡與 UI --- */
-        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .flashcard { height: 110px; perspective: 1000px; cursor: pointer; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; border: 1px solid #eee; font-weight: bold; }
+       /* --- 💡 500單與單字卡純淨樣式 --- */
+        .vocab-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 15px; 
+            padding: 10px 0; 
+        }
+        
+        .flashcard { 
+            height: 110px; 
+            perspective: 1000px; 
+            cursor: pointer; 
+        }
+        
+        .flashcard-inner { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform-style: preserve-3d; 
+        }
+        
+        .flashcard.flipped .flashcard-inner { 
+            transform: rotateY(180deg); 
+        }
+        
+        .flashcard-front, .flashcard-back { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 12px; 
+            text-align: center; 
+            border: 1px solid #eee; 
+            box-sizing: border-box; 
+            font-weight: bold; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        }
+        
         .flashcard-front { background: white; color: var(--deep-purple); }
         .flashcard-back { background: var(--main-purple); color: white; transform: rotateY(180deg); }
-        #translate-popup { display: none; position: absolute; background: white; border: 1px solid var(--main-purple); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2500; border-radius: 12px; width: 220px; }
-        #context-menu { display: none; position: absolute; z-index: 3000; background: white; border: 1px solid var(--main-purple); border-radius: 8px; width: 130px; }
-        .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
-        /* --- 📰 新聞清單整體美化 --- */
-        #news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 25px;
-        }
+        
+        /* 懸浮時稍微浮起 */
+        .flashcard:hover { transform: translateY(-3px); transition: 0.3s; }
+                #translate-popup { display: none; position: absolute; background: white; border: 1px solid var(--main-purple); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2500; border-radius: 12px; width: 220px; }
+                #context-menu { display: none; position: absolute; z-index: 3000; background: white; border: 1px solid var(--main-purple); border-radius: 8px; width: 130px; }
+                .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
+                /* --- 📰 新聞清單整體美化 --- */
+                #news-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    margin-top: 25px;
+                }
         
         #news-list .content-card {
             background: white;
@@ -298,7 +339,7 @@
     <section id="video-detail-page" class="page"><button class="back-btn" onclick="showPage('video-list-page')">返回影片列表</button><h2 class="section-title" id="detail-video-title">正在播放</h2><div class="content-card"><div id="video-player"></div><div class="transcript-container"><div class="transcript-column nl-box"><span class="box-label">荷語逐字稿</span><div id="dutch-transcript" class="transcript-text"></div></div><div class="transcript-column zh-box"><span class="box-label">中文翻譯</span><div id="chinese-transcript" class="transcript-text"></div></div></div></div></section>
     <section id="podcast" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🎧 Podcast 推薦</h2><div class="filter-container" id="podcast-filters"></div><div id="podcast-list" class="dashboard-grid"></div></section>
     <section id="news" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📰 今日新聞</h2><div id="news-list"></div></section>
-    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"></div></section>
+    <section id="common-vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">💡 常用 500 單字</h2><div id="common-vocab-list" class="vocab-grid"><p style="text-align:center; grid-column: 1/-1;">正在從雲端搬運單字中...</p></div></section>
     <section id="vocab" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">🔥 我的單字庫</h2><div id="my-vocab-list" class="vocab-grid"></div></section>
     <section id="grammar" class="page"><button class="back-btn" onclick="showPage('home-page')">返回首頁</button><h2 class="section-title">📚 文法單元</h2><div id="grammar-list-area" class="dashboard-grid" style="grid-template-columns: 1fr 1fr;"></div></section>
 </div>
@@ -439,35 +480,43 @@ function filterPodcasts(cat, btn) {
     renderPodcasts(cat === "全部" ? pool.podcasts : pool.podcasts.filter(i => i.category === cat));
 }
 async function loadCommon500() {
-    // 💡 請再次確認這個連結在瀏覽器直接開啟時，會自動下載一個 .csv 檔案
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIvZ0IY5T_OQ34OMEC55MY5DlJZxMGnref44KQ0U64BxADFtLmkP_y9Toq2YxK0xhNE33qJ2uQoBOX/pub?output=csv";
     
     try {
-        console.log("正在連線 500 單資料庫...");
         const res = await fetch(url);
-        if (!res.ok) throw new Error("網路請求失敗");
-        
         const text = await res.text();
-        const rows = text.split('\n').slice(1); // 跳過標題列
         
-        // 修正解析邏輯：確保每一行都有內容才處理
-        pool.common500 = rows.map(r => {
-            const cols = r.split(',');
-            // 抓取 A 欄和 B 欄，並過濾掉可能的多餘引號
+        // 解析 CSV 並過濾空行
+        const rows = text.split(/\r?\n/).slice(1); 
+        const vocabData = rows.map(r => {
+            const cols = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             return { 
                 word: cols[0]?.replace(/"/g, '').trim(), 
                 trans: cols[1]?.replace(/"/g, '').trim() 
             };
-        }).filter(item => item.word && item.trans); // 確保單字與翻譯都不為空
+        }).filter(item => item.word && item.trans);
 
-        console.log(`成功載入 ${pool.common500.length} 個 500 單單字`);
-        renderCommonVocab(); // 呼叫獨立的渲染函數
+        // 渲染 HTML (純翻面版)
+        const area = document.getElementById('common-vocab-list');
+        if (vocabData.length === 0) {
+            area.innerHTML = "<p>資料夾空空的，請檢查試算表內容。</p>";
+            return;
+        }
+
+        area.innerHTML = vocabData.map(i => `
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">${i.word}</div>
+                    <div class="flashcard-back">${i.trans}</div>
+                </div>
+            </div>`).join('');
+            
+        console.log("✅ 500單純淨版載入成功！");
     } catch (e) {
-        console.error("500單載入失敗，錯誤訊息：", e);
-        document.getElementById('common-vocab-list').innerHTML = `<p style="color:red; text-align:center;">資料載入失敗，請檢查網路或 Google 試算表發佈設定。</p>`;
+        console.error("❌ 500單載入出錯:", e);
+        document.getElementById('common-vocab-list').innerHTML = `<p style="color:red; text-align:center; grid-column:1/-1;">連不到試算表，請確認網路或發佈設定。</p>`;
     }
 }
-
 // 獨立出來的渲染函數，確保測驗模式切換時也能正確呼叫
 function renderCommonVocab() {
     const area = document.getElementById('common-vocab-list');

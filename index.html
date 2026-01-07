@@ -186,7 +186,77 @@
         #translate-popup { display: none; position: absolute; background: white; border: 1px solid var(--main-purple); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2500; border-radius: 12px; width: 220px; }
         #context-menu { display: none; position: absolute; z-index: 3000; background: white; border: 1px solid var(--main-purple); border-radius: 8px; width: 130px; }
         .menu-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
+        /* --- 📰 新聞清單整體美化 --- */
+        #news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
         
+        #news-list .content-card {
+            background: white;
+            border: 1px solid #f0e6f5;
+            border-radius: 18px; /* 圓潤角 */
+            padding: 25px;
+            border-left: 8px solid var(--main-purple); /* 標誌性的左邊條 */
+            box-shadow: 0 4px 15px rgba(217, 77, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: default;
+        }
+        
+        /* 懸浮時的動態效果 */
+        #news-list .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(217, 77, 255, 0.12);
+            border-left-width: 12px; /* 懸浮時邊條稍微變寬，更有互動感 */
+        }
+        
+        /* 新聞標題 */
+        #news-list h3 {
+            margin: 10px 0;
+            color: var(--deep-purple);
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+        
+        /* 新聞簡介文字 */
+        #news-list p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* 來源標籤 (膠囊造型) */
+        .news-source-tag {
+            background: #fdf5ff;
+            color: var(--main-purple);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid rgba(217, 77, 255, 0.2);
+            display: inline-block;
+        }
+        
+        /* 閱讀全文按鈕樣式 */
+        .read-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--main-purple);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        
+        .read-more-btn:hover {
+            gap: 12px; /* 箭頭向右推開 */
+            filter: brightness(0.8);
+        }
         @media (max-width: 768px) { .transcript-container { flex-direction: column; } #podcast-list .content-card { height: auto; flex-direction: column; align-items: flex-start; } .podcast-thumb { width: 100%; height: 150px; } }
     </style>
 </head>
@@ -276,25 +346,27 @@ function pushToHome(type, title, category, targetId, thumbUrl = "", isVideo = fa
 // --- 各項載入邏輯 ---
 
 async function loadNews() {
-    // 💡 這裡填入妳新聞試算表的 CSV 連結
+    // 💡 確保妳的 url 是正確的試算表 CSV 連結
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyPZtfBk2ED0-JBkhF0hTstrvp67v6sr5ndwAGQT8miCARIm1Bi5otqE58noyso-5Psewp4H4Q4Ogu/pub?output=csv";
     try {
         const res = await fetch(url);
         const text = await res.text();
         const rows = text.split('\n').slice(1);
         
-        // 假設欄位 A:標題, B:連結, C:來源, D:簡介
         pool.news = rows.map(r => {
             const c = r.split(',');
             return { title: c[0], url: c[1], source: c[2] || "Kelsey 精選", content: c[3] };
         }).filter(i => i.title);
         
+        // ✨ 這裡改用美化後的 HTML 結構
         document.getElementById('news-list').innerHTML = pool.news.map(art => `
             <div class="content-card">
-                <span class="source-tag">${art.source}</span>
+                <span class="news-source-tag">來自 · ${art.source}</span>
                 <h3>${art.title}</h3>
-                <p>${art.content}</p>
-                <a href="${art.url}" target="_blank" style="color:var(--main-purple); font-weight:bold; text-decoration:none;">閱讀全文 →</a>
+                <p>${art.content || "點擊下方連結閱讀完整荷蘭語新聞內容。"}</p>
+                <a href="${art.url}" target="_blank" class="read-more-btn">
+                    Lees meer (閱讀全文) <span>→</span>
+                </a>
             </div>`).join('');
     } catch(e){ console.error("新聞載入失敗", e); }
 }

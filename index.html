@@ -276,13 +276,27 @@ function pushToHome(type, title, category, targetId, thumbUrl = "", isVideo = fa
 // --- 各項載入邏輯 ---
 
 async function loadNews() {
+    // 💡 這裡填入妳新聞試算表的 CSV 連結
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyPZtfBk2ED0-JBkhF0hTstrvp67v6sr5ndwAGQT8miCARIm1Bi5otqE58noyso-5Psewp4H4Q4Ogu/pub?output=csv";
     try {
-        const res = await fetch('data/news.json');
-        const data = await res.json();
-        pool.news = data;
-        document.getElementById('news-list').innerHTML = data.map(art => `
-            <div class="content-card"><span class="source-tag">${art.source}</span><h3>${art.title}</h3><p>${art.content}</p><a href="${art.url}" target="_blank" style="color:var(--main-purple);">閱讀全文</a></div>`).join('');
-    } catch(e) {}
+        const res = await fetch(url);
+        const text = await res.text();
+        const rows = text.split('\n').slice(1);
+        
+        // 假設欄位 A:標題, B:連結, C:來源, D:簡介
+        pool.news = rows.map(r => {
+            const c = r.split(',');
+            return { title: c[0], url: c[1], source: c[2] || "Kelsey 精選", content: c[3] };
+        }).filter(i => i.title);
+        
+        document.getElementById('news-list').innerHTML = pool.news.map(art => `
+            <div class="content-card">
+                <span class="source-tag">${art.source}</span>
+                <h3>${art.title}</h3>
+                <p>${art.content}</p>
+                <a href="${art.url}" target="_blank" style="color:var(--main-purple); font-weight:bold; text-decoration:none;">閱讀全文 →</a>
+            </div>`).join('');
+    } catch(e){ console.error("新聞載入失敗", e); }
 }
 
 async function loadVideos() {
@@ -367,29 +381,32 @@ async function loadGrammar() {
 
 // --- 每日四合一隨機邏輯 ---
 function displayDailyRecommendations() {
-    const now = new Date();
-    const offsetTime = new Date(now.getTime() - (9 * 60 * 60 * 1000));
-    const seed = offsetTime.getFullYear() * 10000 + (offsetTime.getMonth() + 1) * 100 + offsetTime.getDate();
+    // 根據日期產生成唯一的種子碼（早上 9 點更新）
+    const seed = (new Date(new Date().getTime() - 9*3600000)).toISOString().slice(0,10).replace(/-/g,'');
+    const home = document.getElementById('home-recommendation'); 
+    home.innerHTML = ''; // 清空原本的載入文字
 
-    // 從每一類各挑選一個
-    if(pool.videos.length > 0) {
-        const v = pool.videos[seed % pool.videos.length];
-        pushToHome('今日影片', v.title, '精選', 'video-detail-page', v.thumb, true, v.idx);
+    // 1. 推薦影片
+    if(pool.videos.length){ 
+        const v = pool.videos[parseInt(seed) % pool.videos.length]; 
+        pushToHome('今日影片', v.title, '精選', 'video-detail', v.thumb, true, v.idx); 
     }
-    if(pool.podcasts.length > 0) {
-        const p = pool.podcasts[(seed + 1) % pool.podcasts.length];
-        pushToHome('推薦Podcast', p.title, p.category, 'podcast', p.imgUrl);
+    // 2. 推薦 Podcast
+    if(pool.podcasts.length){ 
+        const p = pool.podcasts[(parseInt(seed)+1) % pool.podcasts.length]; 
+        pushToHome('推薦 Podcast', p.title, p.category, 'podcast', p.imgUrl); 
     }
-    if(pool.news.length > 0) {
-        const n = pool.news[(seed + 2) % pool.news.length];
-        pushToHome('今日新聞', n.title, n.source, 'news');
+    // 3. 今日新聞
+    if(pool.news.length){ 
+        const n = pool.news[(parseInt(seed)+2) % pool.news.length]; 
+        pushToHome('今日新聞', n.title, n.source, 'news'); 
     }
-    if(pool.grammar.length > 0) {
-        const g = pool.grammar[(seed + 3) % pool.grammar.length];
-        pushToHome('必學文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar');
+    // 4. 必學文法
+    if(pool.grammar.length){ 
+        const g = pool.grammar[(parseInt(seed)+3) % pool.grammar.length]; 
+        pushToHome('必學文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar'); 
     }
 }
-
 // 單字庫與啟動
 function loadFlashcards() {
     const list = JSON.parse(localStorage.getItem('myVocab') || '[]');

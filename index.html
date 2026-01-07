@@ -30,9 +30,19 @@
         .highlight-card { background: white; border: 1px solid #f0e6f5; border-radius: 12px; border-left: 6px solid var(--main-purple); cursor: pointer; transition: 0.3s; display: flex; align-items: center; padding: 12px; overflow: hidden; }
         .highlight-card:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(217, 77, 255, 0.15); }
         .rec-thumb { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
-        .highlight-tag { background: #fdf5ff; color: var(--main-purple); border: 1px solid rgba(217, 77, 255, 0.3); padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
-
-        /* --- 4. 影片與對照框 --- */
+        .highlight-tag {
+            background: #fdf5ff;
+            color: var(--main-purple);
+            border: 1px solid rgba(217, 77, 255, 0.3);
+            padding: 3px 12px;
+            border-radius: 20px; /* 膠囊造型 */
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+            /* --- 4. 影片與對照框 --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
         .video-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
         .video-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -54,16 +64,49 @@
         .filter-btn.active { background-color: var(--main-purple); color: white; }
         /* --- 1. Podcast 卡片懸浮與美化 --- */
         #podcast-list .content-card {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        box-shadow 0.3s ease, 
-                        border-color 0.3s ease;
-            will-change: transform;
+            background: white;
+            border: 1px solid #f0e6f5;
+            border-radius: 16px;
+            padding: 15px;
+            border-left: 8px solid var(--main-purple);
+            box-shadow: 0 4px 12px rgba(217, 77, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 帶有彈性的浮起 */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 125px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #podcast-list .content-card:hover {
+            transform: translateY(-8px) scale(1.02); /* 向上浮起並輕微放大 */
+            box-shadow: 0 15px 30px rgba(217, 77, 255, 0.15); /* 加深紫色陰影 */
+            border-color: var(--main-purple);
         }
         
-        #podcast-list .content-card:hover {
-            transform: translateY(-10px) scale(1.02); /* 更動態的浮起 */
-            box-shadow: 0 15px 35px rgba(217, 77, 255, 0.2); /* 更深邃的紫色陰影 */
-            border-color: var(--main-purple); /* 邊框顏色變亮 */
+        /* 當卡片被懸浮時，裡面的標籤也會跟著變色 */
+        #podcast-list .content-card:hover .highlight-tag {
+            background: var(--main-purple);
+            color: white;
+        }
+        
+        /* --- 3. 點擊連結 (收聽按鈕) 的美化 --- */
+        .listen-link {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--main-purple);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .listen-link:hover {
+            gap: 10px; /* 滑鼠移上去時，箭頭會往右推開 */
+            filter: brightness(0.8); /* 顏色微深 */
         }
         
         /* --- 2. 返回首頁按鈕：極簡優化 --- */
@@ -281,10 +324,27 @@ async function loadPodcasts() {
 }
 
 function renderPodcasts(list) {
-    document.getElementById('podcast-list').innerHTML = list.map(i => {
-        const imageHtml = i.imgUrl ? `<img src="${i.imgUrl}" class="podcast-thumb">` : `<div class="podcast-thumb" style="display:flex;align-items:center;justify-content:center;background:#eee;">🎧</div>`;
-        return `<div class="content-card">${imageHtml}<div class="podcast-info"><span class="highlight-tag" style="width:fit-content;">${i.category}</span><h3>${i.title}</h3><p style="font-size:0.85rem;color:#666;">${i.desc || ""}</p><a href="${i.link}" target="_blank" style="text-decoration:none;font-weight:bold;color:var(--main-purple);font-size:0.85rem;">收聽單集 →</a></div></div>`;
-    }).join('') || '<p>目前沒有內容喔！</p>';
+    const area = document.getElementById('podcast-list');
+    if (!list.length) { area.innerHTML = '<p>目前沒有內容喔！</p>'; return; }
+    
+    area.innerHTML = list.map(i => {
+        const imageHtml = i.imgUrl 
+            ? `<img src="${i.imgUrl}" class="podcast-thumb">` 
+            : `<div class="podcast-thumb" style="display:flex;align-items:center;justify-content:center;background:#eee;">🎧</div>`;
+            
+        return `
+            <div class="content-card">
+                ${imageHtml}
+                <div class="podcast-info">
+                    <span class="highlight-tag">${i.category}</span>
+                    <h3>${i.title}</h3>
+                    <p style="font-size:0.8rem; color:#666; margin:0;">${i.desc || ""}</p>
+                    <a href="${i.link}" target="_blank" class="listen-link">
+                        收聽單集 <span>→</span>
+                    </a>
+                </div>
+            </div>`;
+    }).join('');
 }
 
 function filterPodcasts(cat, btn) {
@@ -380,5 +440,16 @@ document.getElementById('ctx-delete').onclick = () => {
     }
 };
 </script>
+    <div id="translate-popup">
+    <strong id="selected-word"></strong>
+    <p id="translation-result" style="margin: 8px 0; color: #666; font-size: 0.95rem; line-height: 1.4;"></p>
+    <button id="add-to-list-btn">✨ 加入單字庫</button>
+</div>
+
+<div id="context-menu">
+    <div class="menu-item delete" id="ctx-delete">
+        <span>🗑️</span> 刪除單字
+    </div>
+</div>
 </body>
 </html>

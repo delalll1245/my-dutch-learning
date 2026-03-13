@@ -142,19 +142,24 @@ function showPage(pageId) {
 
 // --- 資料載入 ---
 async function loadNews() {
+    // 💡 這裡填入妳的新聞試算表 CSV 連結
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyPZtfBk2ED0-JBkhF0hTstrvp67v6sr5ndwAGQT8miCARIm1Bi5otqE58noyso-5Psewp4H4Q4Ogu/pub?output=csv";
     try {
-        const rows = (await (await fetch(url)).text()).split('\n').slice(1);
-        pool.news = rows.map(r => { const c = r.split(','); return { title: c[0], url: c[1], source: c[2]||"Kelsey精選", content: c[3] }; }).filter(i=>i.title);
+        const text = await (await fetch(url)).text();
+        const rows = text.split('\n').slice(1);
+        pool.news = rows.map(r => {
+            const c = r.split(',');
+            return { title: c[0], url: c[1], source: c[2] || "Kelsey精選", content: c[3] };
+        }).filter(i => i.title);
+        
         document.getElementById('news-list').innerHTML = pool.news.map(art => `
             <div class="content-card">
                 <span class="highlight-tag">來源：${art.source}</span>
                 <h3>${art.title}</h3><p>${art.content}</p>
-                <a href="${art.url}" target="_blank" style="color:var(--main-purple); font-weight:bold; text-decoration:none;">閱讀全文 →</a>
+                <a href="${art.url}" target="_blank" style="color:var(--main-purple); font-weight:bold; text-decoration:none;">Lees meer (閱讀全文) →</a>
             </div>`).join('');
-    } catch(e){}
+    } catch(e){ console.error("新聞載入失敗", e); }
 }
-
 async function loadVideos() {
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8wPI8N4w0wlhmpmkpocU5EiYc9d3taHZKwCyZLhNgbqX1llerSDiK4Ic8V_pwkBzieJwOPRwDEjNT/pub?output=csv";
     try {
@@ -201,12 +206,32 @@ async function loadGrammar() {
 
 // 每日套餐邏輯
 function displayDailyRecommendations() {
-    const seed = (new Date(new Date().getTime() - 9*3600000)).toISOString().slice(0,10).replace(/-/g,'');
-    const home = document.getElementById('home-recommendation'); home.innerHTML = '';
-    if(pool.videos.length){ const v = pool.videos[parseInt(seed)%pool.videos.length]; pushToHome('影片', v.title, '精選', 'video-detail', v.thumb, true, v.idx); }
-    if(pool.podcasts.length){ const p = pool.podcasts[(parseInt(seed)+1)%pool.podcasts.length]; pushToHome('Podcast', p.title, p.category, 'podcast', p.imgUrl); }
-    if(pool.news.length){ const n = pool.news[(parseInt(seed)+2)%pool.news.length]; pushToHome('新聞', n.title, n.source, 'news'); }
-    if(pool.grammar.length){ const g = pool.grammar[(parseInt(seed)+3)%pool.grammar.length]; pushToHome('文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar'); }
+    // 產生日期種子 (早上 9 點更新)
+    const seedStr = (new Date(new Date().getTime() - 9*3600000)).toISOString().slice(0,10).replace(/-/g,'');
+    const seed = parseInt(seedStr);
+    const home = document.getElementById('home-recommendation'); 
+    home.innerHTML = ''; 
+
+    // 1. 影片推薦
+    if(pool.videos.length){ 
+        const v = pool.videos[seed % pool.videos.length]; 
+        pushToHome('影片', v.title, '精選', 'video-detail-page', v.thumb, true, v.idx); 
+    }
+    // 2. Podcast 推薦
+    if(pool.podcasts.length){ 
+        const p = pool.podcasts[(seed + 1) % pool.podcasts.length]; 
+        pushToHome('Podcast', p.title, p.category, 'podcast', p.imgUrl); 
+    }
+    // 3. 新聞推薦
+    if(pool.news.length){ 
+        const n = pool.news[(seed + 2) % pool.news.length]; 
+        pushToHome('新聞', n.title, n.source, 'news'); 
+    }
+    // 4. 文法推薦
+    if(pool.grammar.length){ 
+        const g = pool.grammar[(seed + 3) % pool.grammar.length]; 
+        pushToHome('文法', `Unit ${g[0]}: ${g[1]}`, '基礎', 'grammar'); 
+    }
 }
 
 function pushToHome(type, title, category, targetId, thumbUrl="", isVideo=false, vIdx=0) {
@@ -232,9 +257,12 @@ document.addEventListener('mouseup', async (e) => {
 });
 
 async function init() {
+    // 同步載入四個雲端資料庫
     await Promise.all([loadNews(), loadVideos(), loadPodcasts(), loadGrammar()]);
+    // 執行首頁套餐分配
     displayDailyRecommendations();
 }
+
 window.onload = init;
 </script>
 </body>

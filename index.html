@@ -451,8 +451,8 @@
                     url: c[0], 
                     nl: c[2], 
                     zh: c[3], 
-                    downloadUrl: c[4]?.trim() || "", 
-                    thumb: \`https://img.youtube.com/vi/\${id}/mqdefault.jpg\`, 
+                    downloadUrl: c[4] ? c[4].trim() : "", 
+                    thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`, 
                     idx: i 
                 };
             }).filter(i => i.title);
@@ -471,7 +471,7 @@
         let id = v.url.includes("v=") ? v.url.split("v=")[1].split("&")[0] : v.url.split("be/")[1];
         
         document.getElementById('detail-video-title').innerText = `📺 ${v.title}`;
-        document.getElementById('download-area').innerHTML = v.downloadUrl ? `<a href="${v.downloadUrl}" target="_blank" class="download-btn">下載本集補充資料</a>` : "";
+        document.getElementById('download-area').innerHTML = v.downloadUrl ? `<a href="${v.downloadUrl}" target="_blank" class="download-btn">📥 下載補充資料</a>` : "";
         document.getElementById('video-player').innerHTML = `<iframe width="100%" height="450" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
         
         document.getElementById('dutch-transcript').innerText = v.nl.replaceAll('|', '\n');
@@ -493,8 +493,8 @@
                 return { 
                     title: c[0], 
                     link: c[1], 
-                    category: c[3]?.trim() || "精選", 
-                    imgUrl: c[4]?.trim() || "" 
+                    category: c[3] ? c[3].trim() : "精選", 
+                    imgUrl: c[4] ? c[4].trim() : "" 
                 };
             }).filter(i => i.title);
             

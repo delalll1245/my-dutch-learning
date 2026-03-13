@@ -57,11 +57,29 @@
         .transcript-column { flex: 1; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .nl-box { border-top: 5px solid var(--main-purple); }
         .zh-box { border-top: 5px solid var(--amber-yellow); }
-        .transcript-text { font-size: 1rem; line-height: 1.8; white-space: pre-line; max-height: 400px; overflow-y: auto; }
-
+        .transcript-text {height: 400px;overflow-y: auto; padding-right: 15px; white-space: pre-line;line-height: 1.8;}
         /* 翻譯彈窗 (保持玻璃擬態美感) */
         #translate-popup { display: none; position: absolute; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(217, 77, 255, 0.3); padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 2500; border-radius: 16px; width: 220px; }
-
+        .listen-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: #fdf5ff;
+            color: var(--main-purple);
+            border: 1.5px solid rgba(217, 77, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .listen-link:hover {
+            transform: translateY(-5px) scale(1.05); /* 💡 向上浮動 */
+            background: var(--main-purple);
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(217, 77, 255, 0.4);
+        }
         @media (max-width: 768px) { .transcript-container { flex-direction: column; } .podcast-card { flex-direction: column; text-align: center; } }
     </style>
 </head>
@@ -119,6 +137,9 @@
         <button class="back-btn" onclick="showPage('home-page')">返回首頁</button>
         <h2 class="section-title">🎧 Podcast 推薦</h2>
         <div id="podcast-list"></div>
+        <a href="${p.link}" target="_blank" class="listen-link">
+        Lees/Luister <span>→</span>
+    </a>
     </section>
 
     <section id="grammar" class="page">
